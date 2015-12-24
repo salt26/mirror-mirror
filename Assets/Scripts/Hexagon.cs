@@ -3,11 +3,6 @@ using System.Collections;
 
 public class Hexagon
 {
-    int x, y;   // 맵상 좌표
-    /* <x,y>
-     *   <0,0> <1,0> ...
-     * <1,0> <1,1> ...
-    **/
     TileType tile;
     Direction dir;
 
