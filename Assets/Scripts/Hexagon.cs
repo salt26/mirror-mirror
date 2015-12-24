@@ -22,11 +22,34 @@ public class Hexagon
         return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input));
     }
 
+    public void Flip(Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.North:
+            case Direction.NEE:
+            case Direction.EES:
+            case Direction.South:
+            case Direction.SWW:
+            case Direction.WWN:
+                this.dir = DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(this.dir));
+                return;
+            default:
+                return;
+        }
+    }
+
+    public static int AdjustDegree(int degree)
+    {
+        int result = degree;
+        result = (result % 360);    // Over 360
+        result = (result < 0) ? 360 - ((-result) % 360) : result; // Under 0
+        return result;
+    }
+
     public static Direction DegreeToDirection(int degree)
     {
-        degree = (degree % 360);    // Over 360
-        degree = (degree < 0) ? 360 - ((-degree) % 360) : degree; // Under 0
-        switch (degree)
+        switch (AdjustDegree(degree))
         {
             case 0:
                 return Direction.North;
