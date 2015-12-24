@@ -14,7 +14,24 @@ public class Hexagon
 
     public Direction Reflect(Direction input)
     {
-        return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input));
+        switch (tile)
+        {
+            case TileType.FullCorner:
+            case TileType.FullEdge:
+                return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input));
+            case TileType.HalfCorner:
+            case TileType.HalfEdge:
+                if (((DirectionToDegree(input) > DirectionToDegree(dir) - 90 && DirectionToDegree(dir) > 90) ||
+                    (DirectionToDegree(input) > AdjustDegree(DirectionToDegree(dir) - 90) && DirectionToDegree(dir) < 90)) &&
+                    ((DirectionToDegree(input) < DirectionToDegree(dir) + 90 && DirectionToDegree(dir) < 270) ||
+                    (DirectionToDegree(input) < AdjustDegree(DirectionToDegree(dir) + 90) && DirectionToDegree(dir) > 270)))
+                    return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input));
+                else
+                    return input;
+            case TileType.Empty:
+            default:
+                return input;
+        }
     }
 
     public void Flip(Direction dir)
@@ -71,7 +88,7 @@ public class Hexagon
             case 330:
                 return Direction.WNN;
             default:
-                return Direction.Exn;
+                return Direction.Empty;
         }
     }
 
@@ -112,7 +129,7 @@ public class Hexagon
 public enum TileType { Empty, HalfCorner, HalfEdge, FullCorner, FullEdge }  // Half : 반거울, Full : 거울 / Corner : 꼭지점을 잇는 거울, Edge : 변의 중심을 잇는 거울
 public enum Direction
 {
-    Exn = 0,
+    Empty = 0,
     North,
     NNE,
     NEE,
