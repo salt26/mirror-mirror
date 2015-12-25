@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Hexagon
 {
-    TileType tile;
-    Direction dir;
+    public TileType tile;
+    public Direction dir;
 
     public Hexagon(TileType tile, Direction dir)
     {
