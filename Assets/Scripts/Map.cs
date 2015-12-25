@@ -12,19 +12,19 @@ public class Map
         // 기획서 맵 예시
         tileset.Add(new Pos(0, 1), new Hexagon(TileType.FullCorner, Direction.NEE));
         tileset.Add(new Pos(0, 2), new Hexagon(TileType.HalfCorner, Direction.SWW));
-        tileset.Add(new Pos(0, 3), new Hexagon(TileType.FullEdge,   Direction.East));
+        tileset.Add(new Pos(0, 3), new Hexagon(TileType.FullEdge, Direction.East));
         tileset.Add(new Pos(1, 0), new Hexagon(TileType.HalfCorner, Direction.North));
-        tileset.Add(new Pos(1, 1), new Hexagon(TileType.HalfEdge  , Direction.ESS));
+        tileset.Add(new Pos(1, 1), new Hexagon(TileType.HalfEdge, Direction.ESS));
         tileset.Add(new Pos(1, 2), new Hexagon(TileType.FullCorner, Direction.SWW));
-        tileset.Add(new Pos(1, 3), new Hexagon(TileType.Empty,      Direction.Empty));
+        tileset.Add(new Pos(1, 3), new Hexagon(TileType.Empty, Direction.Empty));
         tileset.Add(new Pos(2, 1), new Hexagon(TileType.FullCorner, Direction.EES));
         tileset.Add(new Pos(2, 2), new Hexagon(TileType.FullCorner, Direction.NEE));
-        tileset.Add(new Pos(2, 3), new Hexagon(TileType.FullEdge  , Direction.NNE));
-        tileset.Add(new Pos(3, 1), new Hexagon(TileType.Empty     , Direction.Empty));
+        tileset.Add(new Pos(2, 3), new Hexagon(TileType.FullEdge, Direction.NNE));
+        tileset.Add(new Pos(3, 1), new Hexagon(TileType.Empty, Direction.Empty));
         tileset.Add(new Pos(3, 2), new Hexagon(TileType.HalfCorner, Direction.SWW));
 
         start = new KeyValuePair<Pos, Direction>(new Pos(1, -1), Direction.North);
-        end   = new KeyValuePair<Pos, Direction>(new Pos(4, 3),  Direction.NEE);
+        end = new KeyValuePair<Pos, Direction>(new Pos(4, 3), Direction.NEE);
     }
 }
 
