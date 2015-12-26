@@ -10,18 +10,18 @@ public class Map
     public Map()
     {
         // 기획서 맵 예시
-        tileset.Add(new Pos(0, 1), new Hexagon(TileType.FullCorner, Direction.NEE));
-        tileset.Add(new Pos(0, 2), new Hexagon(TileType.HalfCorner, Direction.SWW));
-        tileset.Add(new Pos(0, 3), new Hexagon(TileType.FullEdge, Direction.East));
-        tileset.Add(new Pos(1, 0), new Hexagon(TileType.HalfCorner, Direction.North));
-        tileset.Add(new Pos(1, 1), new Hexagon(TileType.HalfEdge, Direction.ESS));
-        tileset.Add(new Pos(1, 2), new Hexagon(TileType.FullCorner, Direction.SWW));
-        tileset.Add(new Pos(1, 3), new Hexagon(TileType.Empty, Direction.Empty));
-        tileset.Add(new Pos(2, 1), new Hexagon(TileType.FullCorner, Direction.EES));
-        tileset.Add(new Pos(2, 2), new Hexagon(TileType.FullCorner, Direction.NEE));
-        tileset.Add(new Pos(2, 3), new Hexagon(TileType.FullEdge, Direction.NNE));
-        tileset.Add(new Pos(3, 1), new Hexagon(TileType.Empty, Direction.Empty));
-        tileset.Add(new Pos(3, 2), new Hexagon(TileType.HalfCorner, Direction.SWW));
+        tileset.Add(new Pos(0, 1), new Hexagon(TileType.FullCorner, Direction.NEE, new Pos(0, 1)));
+        tileset.Add(new Pos(0, 2), new Hexagon(TileType.HalfCorner, Direction.SWW, new Pos(0, 2)));
+        tileset.Add(new Pos(0, 3), new Hexagon(TileType.FullEdge, Direction.East, new Pos(0, 3)));
+        tileset.Add(new Pos(1, 0), new Hexagon(TileType.HalfCorner, Direction.North, new Pos(1, 0)));
+        tileset.Add(new Pos(1, 1), new Hexagon(TileType.HalfEdge, Direction.ESS, new Pos(1, 1)));
+        tileset.Add(new Pos(1, 2), new Hexagon(TileType.FullCorner, Direction.SWW, new Pos(1, 2)));
+        tileset.Add(new Pos(1, 3), new Hexagon(TileType.Empty, Direction.Empty, new Pos(1, 3)));
+        tileset.Add(new Pos(2, 1), new Hexagon(TileType.FullCorner, Direction.EES, new Pos(2, 1)));
+        tileset.Add(new Pos(2, 2), new Hexagon(TileType.FullCorner, Direction.NEE, new Pos(2, 2)));
+        tileset.Add(new Pos(2, 3), new Hexagon(TileType.FullEdge, Direction.NNE, new Pos(2, 3)));
+        tileset.Add(new Pos(3, 1), new Hexagon(TileType.Empty, Direction.Empty, new Pos(3, 1)));
+        tileset.Add(new Pos(3, 2), new Hexagon(TileType.HalfCorner, Direction.SWW, new Pos(3, 2)));
 
         start = new KeyValuePair<Pos, Direction>(new Pos(1, -1), Direction.North);
         end = new KeyValuePair<Pos, Direction>(new Pos(4, 3), Direction.NEE);
@@ -45,11 +45,11 @@ public class Pos
     }
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return x * 1 << 16 + y;
     }
     public override bool Equals(object obj)
     {
-        return base.Equals(obj as Pos);
+        return x == (obj as Pos).x && y == (obj as Pos).y;
     }
     public bool Equals(Pos obj)
     {

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class GameLoader : MonoBehaviour
 {
     public Map map;
-    public GameObject[] tiles;
     private Transform mapHolder;
+    public GameObject[] tiles;
     public const float scale = 2f;
     public const float xOffset = -1f;
     public const float yOffset = -2f;
@@ -16,15 +16,13 @@ public class GameLoader : MonoBehaviour
     {
         map = new Map();
         mapHolder = new GameObject("Map").transform;
-        foreach (KeyValuePair<Pos, Hexagon> tile in map.tileset)
+        foreach (Hexagon tile in map.tileset.Values)
         {
-            GameObject tileInstance = Instantiate(tiles[(int)tile.Value.tile],
-                PosToWorld(tile.Key), Quaternion.AngleAxis(Hexagon.DirectionToDegree(tile.Value.dir), Vector3.back)) as GameObject;
-            tileInstance.transform.SetParent(mapHolder);
+            tile.obj.transform.SetParent(mapHolder);
         }
     }
 
-    Vector3 PosToWorld(Pos p)
+    public static Vector3 PosToWorld(Pos p)
     {
         return new Vector3(xOffset + p.x * 0.75f, yOffset + ((p.x % 2 == 0) ? p.y : p.y + 0.5f) * Mathf.Sqrt(3f) / 2f, 0f) * scale;
     }
@@ -32,5 +30,14 @@ public class GameLoader : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Hexagon tile;
+        foreach (Hexagon t in map.tileset.Values)
+        {
+            t.obj.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+        if (map.tileset.TryGetValue(InputHandler.WorldToPos(Input.mousePosition), out tile))
+        {
+            tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+        }
     }
 }
