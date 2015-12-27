@@ -3,12 +3,13 @@ using System.Collections;
 
 public class InputHandler : MonoBehaviour
 {
-    private Hexagon clicked, released;
     private MouseStatus status = MouseStatus.Neutral;
     public const float scale = 2f;
     public const float xOffset = -1f;
     public const float yOffset = -2f;
     private Vector3 start;
+    public ArrayList selectedTiles = new ArrayList();
+    public Direction dir;
 
     void Start()
     {
@@ -20,18 +21,25 @@ public class InputHandler : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         if (Input.GetMouseButtonUp(0))
         {
-            foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
+            if (status == MouseStatus.Clicked)
             {
-                tile.obj.GetComponent<SpriteRenderer>().color = Color.white;
+                foreach (Hexagon tile in selectedTiles)
+                {
+                    tile.Flip(dir);
+                }
+                selectedTiles.Clear();
+                foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
+                {
+                    tile.obj.GetComponent<SpriteRenderer>().color = Color.white;
+                }
             }
             status = MouseStatus.Neutral;
         }
         else if (Input.GetMouseButtonDown(0))
         {
             Pos p = WorldToPos(mousePos);
-            if (MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.TryGetValue(p, out clicked))
+            if (MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.ContainsKey(p))
             {
-                clicked.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
                 start = PosToWorld(p);
                 status = MouseStatus.Clicked;
             }
@@ -51,13 +59,18 @@ public class InputHandler : MonoBehaviour
             if (dNorth < dNEE && dNorth < dEES)
             {
                 end = new Vector3(start.x, mouseWorldPos.y);
+                if (mouseWorldPos.y > start.y) dir = Direction.North;
+                else dir = Direction.South;
             }
-            else if(dNEE < dEES)
+            else if (dNEE < dEES)
             {
                 float p, q;
                 p = start.x - Mathf.Sqrt(3) * start.y;
                 q = -Mathf.Sqrt(3) * mouseWorldPos.x - mouseWorldPos.y;
                 end = new Vector3(p - Mathf.Sqrt(3) * q, -Mathf.Sqrt(3) * p - q) / 4f;
+
+                if (mouseWorldPos.x > start.x) dir = Direction.NEE;
+                else dir = Direction.SWW;
             }
             else
             {
@@ -65,8 +78,30 @@ public class InputHandler : MonoBehaviour
                 p = start.x + Mathf.Sqrt(3) * start.y;
                 q = Mathf.Sqrt(3) * mouseWorldPos.x - mouseWorldPos.y;
                 end = new Vector3(p + Mathf.Sqrt(3) * q, Mathf.Sqrt(3) * p - q) / 4f;
+
+                if (mouseWorldPos.x > start.x) dir = Direction.EES;
+                else dir = Direction.WWN;
             }
             Debug.DrawLine(start, end, Color.blue);
+
+            Hexagon tile;
+            Pos pos = WorldToPos(Camera.main.WorldToScreenPoint(start));
+            foreach (Hexagon t in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
+            {
+                t.obj.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+            selectedTiles.Clear();
+            while (!pos.Equals(WorldToPos(Camera.main.WorldToScreenPoint(end))) && MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.TryGetValue(pos, out tile))
+            {
+                selectedTiles.Add(tile);
+                tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+                pos = Hexagon.NextTile(pos, dir);
+            }
+            if (MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.TryGetValue(pos, out tile))
+            {
+                selectedTiles.Add(tile);
+                tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+            }
         }
     }
 

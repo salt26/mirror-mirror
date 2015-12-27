@@ -47,7 +47,9 @@ public class Hexagon
             case Direction.South:
             case Direction.SWW:
             case Direction.WWN:
-                this.dir = DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(this.dir));
+                Direction originalDir = this.dir;
+                this.dir = DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(originalDir) + 180);
+                obj.transform.rotation = Quaternion.AngleAxis(DirectionToDegree(this.dir), Vector3.back);
                 return;
             default:
                 return;
