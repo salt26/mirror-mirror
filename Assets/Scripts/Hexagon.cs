@@ -12,7 +12,7 @@ public class Hexagon
         this.tile = tile;
         this.dir = dir;
         obj = MonoBehaviour.Instantiate(MonoBehaviour.FindObjectOfType<GameLoader>().tiles[(int)tile],
-                GameLoader.PosToWorld(p), Quaternion.AngleAxis(DirectionToDegree(dir), Vector3.back)) as GameObject;
+                InputHandler.PosToWorld(p), Quaternion.AngleAxis(DirectionToDegree(dir), Vector3.back)) as GameObject;
     }
 
     public Direction Reflect(Direction input)
@@ -125,6 +125,28 @@ public class Hexagon
                 return 330;
             default:
                 return 360;
+        }
+    }
+
+    public static Pos NextTile(Pos p, Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.North:
+                return new Pos(p.x, p.y + 1);
+            case Direction.NEE:
+                return new Pos(p.x + 1, (p.x % 2 == 0) ? p.y : p.y + 1);
+            case Direction.EES:
+                return new Pos(p.x + 1, (p.x % 2 == 0) ? p.y - 1 : p.y);
+            case Direction.South:
+                return new Pos(p.x, p.y - 1);
+            case Direction.SWW:
+                return new Pos(p.x - 1, (p.x % 2 == 0) ? p.y - 1 : p.y);
+            case Direction.WWN:
+                return new Pos(p.x - 1, (p.x % 2 == 0) ? p.y : p.y + 1);
+            default:
+                Debug.Log("Invalid Direction");
+                return p;
         }
     }
 }
