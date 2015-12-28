@@ -23,9 +23,12 @@ public class InputHandler : MonoBehaviour
         {
             if (status == MouseStatus.Clicked)
             {
-                foreach (Hexagon tile in selectedTiles)
+                if (selectedTiles.Count > 1)
                 {
-                    tile.Flip(dir);
+                    foreach (Hexagon tile in selectedTiles)
+                    {
+                        tile.Flip(dir);
+                    }
                 }
                 selectedTiles.Clear();
                 foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)

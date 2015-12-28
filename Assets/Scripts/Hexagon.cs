@@ -21,16 +21,16 @@ public class Hexagon
         {
             case TileType.FullCorner:
             case TileType.FullEdge:
-                return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input));
+                return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input) + 180);
             case TileType.HalfCorner:
             case TileType.HalfEdge:
-                if (((DirectionToDegree(input) > DirectionToDegree(dir) - 90 && DirectionToDegree(dir) > 90) ||
+                if (((DirectionToDegree(input) > DirectionToDegree(dir) - 90) ||
                     (DirectionToDegree(input) > AdjustDegree(DirectionToDegree(dir) - 90) && DirectionToDegree(dir) < 90)) &&
-                    ((DirectionToDegree(input) < DirectionToDegree(dir) + 90 && DirectionToDegree(dir) < 270) ||
+                    ((DirectionToDegree(input) < DirectionToDegree(dir) + 90) ||
                     (DirectionToDegree(input) < AdjustDegree(DirectionToDegree(dir) + 90) && DirectionToDegree(dir) > 270)))
-                    return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input));
-                else
                     return input;
+                else
+                    return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input) + 180);
             case TileType.Empty:
             default:
                 return input;

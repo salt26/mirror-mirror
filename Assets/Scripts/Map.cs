@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Map
 {
     public Dictionary<Pos, Hexagon> tileset = new Dictionary<Pos, Hexagon>();
-    public KeyValuePair<Pos, Direction> start, end; // 시작점, 끝점은 편의상 맵 밖에서 들어오는 인접타일의 좌표로 생각
+    public KeyValuePair<Pos, Direction> start, end;
 
     public Map()
     {
@@ -24,7 +24,7 @@ public class Map
         tileset.Add(new Pos(3, 2), new Hexagon(TileType.HalfCorner, Direction.SWW, new Pos(3, 2)));
 
         start = new KeyValuePair<Pos, Direction>(new Pos(1, -1), Direction.North);
-        end = new KeyValuePair<Pos, Direction>(new Pos(4, 3), Direction.NEE);
+        end = new KeyValuePair<Pos, Direction>(new Pos(3, 2), Direction.NEE);
     }
 }
 
