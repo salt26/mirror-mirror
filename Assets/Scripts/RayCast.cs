@@ -25,7 +25,7 @@ public class RayCast : MonoBehaviour
         {
             Hexagon next;
             nextPos = Hexagon.NextTile(p, dir);
-            Debug.DrawLine(InputHandler.PosToWorld(p), InputHandler.PosToWorld(nextPos), Color.red);
+            Debug.DrawLine(Transformer.PosToWorld(p), Transformer.PosToWorld(nextPos), Color.red);
             if (p.Equals(map.end.Key) && dir == map.end.Value)
             {
                 // Clear

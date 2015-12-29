@@ -12,7 +12,7 @@ public class Hexagon
         this.tile = tile;
         this.dir = dir;
         obj = MonoBehaviour.Instantiate(MonoBehaviour.FindObjectOfType<GameLoader>().tiles[(int)tile],
-                InputHandler.PosToWorld(p), Quaternion.AngleAxis(DirectionToDegree(dir), Vector3.back)) as GameObject;
+                Transformer.PosToWorld(p), Quaternion.AngleAxis(DirectionToDegree(dir), Vector3.back)) as GameObject;
     }
 
     public Direction Reflect(Direction input)
