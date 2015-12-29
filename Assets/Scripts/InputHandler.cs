@@ -47,7 +47,7 @@ public class InputHandler : MonoBehaviour
 
         if (status == MouseStatus.Clicked)
         {
-            Vector3 mouseWorldPos = Transformer.MouseToWorld(mousePos);
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mousePos);
             Debug.DrawLine(start, mouseWorldPos, Color.red);
             Vector3 end;
 
@@ -102,6 +102,15 @@ public class InputHandler : MonoBehaviour
                 selectedTiles.Add(tile);
                 tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
             }
+        }
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            Camera.main.orthographicSize += 0.5f;
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.orthographicSize > 2)
+        {
+            Camera.main.orthographicSize -= 0.5f;
         }
     }
 

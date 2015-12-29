@@ -7,14 +7,6 @@ public class Transformer
     public const float xOffset = -1f;
     public const float yOffset = -2f;
 
-    public static Vector3 MouseToWorld(Vector3 p)
-    {
-        float worldX, worldY;
-        worldX = (p.x / Screen.width * 10.0f - 5.0f) * Screen.width / Screen.height;
-        worldY = (p.y / Screen.height * 10.0f - 5.0f);
-        return new Vector3(worldX, worldY);
-    }
-
     public static Vector3 PosToWorld(Pos p)
     {
         return new Vector3(xOffset + p.x * 0.75f, yOffset + ((p.x % 2 == 0) ? p.y : p.y + 0.5f) * Mathf.Sqrt(3f) / 2f, 0f) * scale;
@@ -25,8 +17,8 @@ public class Transformer
         int x, y;
         float worldX, worldY;
 
-        worldX = (input.x / Screen.width * 10.0f - 5.0f) * Screen.width / Screen.height - xOffset * scale + 1f;
-        worldY = (input.y / Screen.height * 10.0f - 5.0f) - yOffset * scale + 1f;
+        worldX = Camera.main.ScreenToWorldPoint(input).x - xOffset * scale + 1f;
+        worldY = Camera.main.ScreenToWorldPoint(input).y - yOffset * scale + 1f;
 
         if (((int)(worldX * 2 - 1) % 3 + 3) % 3 < 2)
         {
