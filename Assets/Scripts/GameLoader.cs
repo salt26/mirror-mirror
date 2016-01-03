@@ -11,7 +11,7 @@ public class GameLoader : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        map = new Map();
+        map = new Map("example");
         mapHolder = new GameObject("Map").transform;
         foreach (Hexagon tile in map.tileset.Values)
         {

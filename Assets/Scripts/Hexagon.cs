@@ -151,6 +151,41 @@ public class Hexagon
                 return p;
         }
     }
+
+    public static TileType ParseTileType(string str)
+    {
+        if (str.Equals("Empty")) return TileType.Empty;
+        else if (str.Equals("HalfCorner")) return TileType.HalfCorner;
+        else if (str.Equals("HalfEdge")) return TileType.HalfEdge;
+        else if (str.Equals("FullCorner")) return TileType.FullCorner;
+        else if (str.Equals("FullEdge")) return TileType.FullEdge;
+        else {
+            Debug.LogError("Wrong Input : ParseTileType");
+            return TileType.Empty;
+        }
+    }
+
+    public static Direction ParseDirection(string str)
+    {
+        if (str.Equals("Empty")) return Direction.Empty;
+        else if (str.Equals("North")) return Direction.North;
+        else if (str.Equals("NNE")) return Direction.NNE;
+        else if (str.Equals("NEE")) return Direction.NEE;
+        else if (str.Equals("East")) return Direction.East;
+        else if (str.Equals("EES")) return Direction.EES;
+        else if (str.Equals("ESS")) return Direction.ESS;
+        else if (str.Equals("South")) return Direction.South;
+        else if (str.Equals("SSW")) return Direction.SSW;
+        else if (str.Equals("SWW")) return Direction.SWW;
+        else if (str.Equals("West")) return Direction.West;
+        else if (str.Equals("WWN")) return Direction.WWN;
+        else if (str.Equals("WNN")) return Direction.WNN;
+        else
+        {
+            Debug.LogError("Wrong Input : ParseDirection");
+            return Direction.Empty;
+        }
+    }
 }
 
 public enum TileType { Empty, HalfCorner, HalfEdge, FullCorner, FullEdge }  // Half : 반거울, Full : 거울 / Corner : 꼭지점을 잇는 거울, Edge : 변의 중심을 잇는 거울

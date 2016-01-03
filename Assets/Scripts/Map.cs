@@ -1,30 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
+using System;
 
 public class Map
 {
     public Dictionary<Pos, Hexagon> tileset = new Dictionary<Pos, Hexagon>();
     public KeyValuePair<Pos, Direction> start, end;
 
-    public Map()
+    public Map(string Filename)
     {
-        // 기획서 맵 예시
-        tileset.Add(new Pos(0, 1), new Hexagon(TileType.FullCorner, Direction.NEE, new Pos(0, 1)));
-        tileset.Add(new Pos(0, 2), new Hexagon(TileType.HalfCorner, Direction.SWW, new Pos(0, 2)));
-        tileset.Add(new Pos(0, 3), new Hexagon(TileType.FullEdge, Direction.East, new Pos(0, 3)));
-        tileset.Add(new Pos(1, 0), new Hexagon(TileType.HalfCorner, Direction.North, new Pos(1, 0)));
-        tileset.Add(new Pos(1, 1), new Hexagon(TileType.HalfEdge, Direction.ESS, new Pos(1, 1)));
-        tileset.Add(new Pos(1, 2), new Hexagon(TileType.FullCorner, Direction.SWW, new Pos(1, 2)));
-        tileset.Add(new Pos(1, 3), new Hexagon(TileType.Empty, Direction.Empty, new Pos(1, 3)));
-        tileset.Add(new Pos(2, 1), new Hexagon(TileType.FullCorner, Direction.EES, new Pos(2, 1)));
-        tileset.Add(new Pos(2, 2), new Hexagon(TileType.FullCorner, Direction.NEE, new Pos(2, 2)));
-        tileset.Add(new Pos(2, 3), new Hexagon(TileType.FullEdge, Direction.NNE, new Pos(2, 3)));
-        tileset.Add(new Pos(3, 1), new Hexagon(TileType.Empty, Direction.Empty, new Pos(3, 1)));
-        tileset.Add(new Pos(3, 2), new Hexagon(TileType.HalfCorner, Direction.SWW, new Pos(3, 2)));
+        TextAsset textAsset = Resources.Load("level/" + Filename) as TextAsset;
+        if (textAsset == null)
+        {
+            Debug.Log("No such Level");
+            return;
+        }
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.LoadXml(textAsset.text);
 
-        start = new KeyValuePair<Pos, Direction>(new Pos(1, -1), Direction.North);
-        end = new KeyValuePair<Pos, Direction>(new Pos(3, 2), Direction.NEE);
+        XmlNodeList tiles = xmldoc.SelectNodes("map/tile");
+        foreach (XmlNode tile in tiles)
+        {
+            int x = Int32.Parse(tile.SelectSingleNode("pos_x").InnerText);
+            int y = Int32.Parse(tile.SelectSingleNode("pos_y").InnerText);
+            tileset.Add(new Pos(x, y),
+                new Hexagon(Hexagon.ParseTileType(tile.SelectSingleNode("type").InnerText),
+                Hexagon.ParseDirection(tile.SelectSingleNode("dir").InnerText),
+                new Pos(x, y)));
+        }
+
+        XmlNode startNode = xmldoc.SelectSingleNode("map/start");
+        int start_x = Int32.Parse(startNode.SelectSingleNode("pos_x").InnerText);
+        int start_y = Int32.Parse(startNode.SelectSingleNode("pos_y").InnerText);
+        start = new KeyValuePair<Pos, Direction>(new Pos(start_x, start_y), Hexagon.ParseDirection(startNode.SelectSingleNode("dir").InnerText));
+
+        XmlNode endNode = xmldoc.SelectSingleNode("map/end");
+        int end_x = Int32.Parse(endNode.SelectSingleNode("pos_x").InnerText);
+        int end_y = Int32.Parse(endNode.SelectSingleNode("pos_y").InnerText);
+        end = new KeyValuePair<Pos, Direction>(new Pos(end_x, end_y), Hexagon.ParseDirection(endNode.SelectSingleNode("dir").InnerText));
     }
 }
 
