@@ -24,10 +24,8 @@ public class Hexagon
                 return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input) + 180);
             case TileType.HalfCorner:
             case TileType.HalfEdge:
-                if (((DirectionToDegree(input) > DirectionToDegree(dir) - 90) ||
-                    (DirectionToDegree(input) > AdjustDegree(DirectionToDegree(dir) - 90) && DirectionToDegree(dir) < 90)) &&
-                    ((DirectionToDegree(input) < DirectionToDegree(dir) + 90) ||
-                    (DirectionToDegree(input) < AdjustDegree(DirectionToDegree(dir) + 90) && DirectionToDegree(dir) > 270)))
+                MonoBehaviour.print(DirectionToDegree(input).ToString() + " " + DirectionToDegree(dir).ToString());
+                if (DegreeBetween(DirectionToDegree(input), DirectionToDegree(dir)) < 90)
                     return input;
                 else
                     return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input) + 180);
@@ -35,6 +33,13 @@ public class Hexagon
             default:
                 return input;
         }
+    }
+
+    public static int DegreeBetween(int deg1, int deg2)
+    {
+        int diff = Mathf.Abs(AdjustDegree(deg1 - deg2));
+        if (diff > 180) diff = 360 - diff;
+        return diff;
     }
 
     public void Flip(Direction dir)
