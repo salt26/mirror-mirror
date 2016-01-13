@@ -190,6 +190,12 @@ public class Hexagon
             return Direction.Empty;
         }
     }
+
+    public void Rotate()
+    {
+        dir = DegreeToDirection(AdjustDegree(DirectionToDegree(dir) + 60));
+        obj.transform.rotation = Quaternion.AngleAxis(DirectionToDegree(this.dir), Vector3.back);
+    }
 }
 
 public enum TileType { Empty, HalfCorner, HalfEdge, FullCorner, FullEdge }  // Half : 반거울, Full : 거울 / Corner : 꼭지점을 잇는 거울, Edge : 변의 중심을 잇는 거울

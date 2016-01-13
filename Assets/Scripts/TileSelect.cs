@@ -4,31 +4,38 @@ using System.Collections;
 public class TileSelect : MonoBehaviour
 {
     public GameObject obj;
-    public GameObject[] others;
     void OnMouseDown()
     {
-        foreach(GameObject tile in others)
+        if (Editor.validSelected && Editor.selected == myType())
         {
-            tile.GetComponent<SpriteRenderer>().color = Color.white;
+            obj.GetComponent<SpriteRenderer>().color = Color.white;
+            Editor.validSelected = false;
         }
-        obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+        else {
+            foreach (GameObject tile in MonoBehaviour.FindObjectOfType<Editor>().tiles)
+            {
+                tile.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+            obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+            Editor.selected = myType();
+            Editor.validSelected = true;
+        }
+    }
+
+    TileType myType()
+    {
         switch (obj.name)
         {
-            case "empty":
-                Editor.selected = TileType.Empty;
-                break;
             case "fullcorner":
-                Editor.selected = TileType.FullCorner;
-                break;
+                return TileType.FullCorner;
             case "halfcorner":
-                Editor.selected = TileType.HalfCorner;
-                break;
+                return TileType.HalfCorner;
             case "fulledge":
-                Editor.selected = TileType.FullEdge;
-                break;
+                return TileType.FullEdge;
             case "halfedge":
-                Editor.selected = TileType.HalfEdge;
-                break;
+                return TileType.HalfEdge;
+            default:
+                return TileType.Empty;
         }
     }
 }
