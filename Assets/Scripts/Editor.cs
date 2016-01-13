@@ -4,6 +4,8 @@ using System.Collections;
 public class Editor : MonoBehaviour
 {
     private MouseStatus status = MouseStatus.Neutral;
+    public static string levelData;
+    public static TileType selected;
 
     // Use this for initialization
     void Start()
@@ -15,21 +17,29 @@ public class Editor : MonoBehaviour
     void Update()
     {
         Vector3 mousePos = Input.mousePosition;
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            if (status == MouseStatus.Clicked)  // 릴리즈
+            if (status == MouseStatus.Neutral)
             {
-                // 
+                
             }
-            status = MouseStatus.Neutral;
-        }
-        else if (Input.GetMouseButtonDown(0))
-        {
             status = MouseStatus.Clicked;
         }
-
-        if (status == MouseStatus.Clicked)
+        else if (Input.GetMouseButtonUp(0))
         {
+            if (status == MouseStatus.Clicked)
+            {
+                Hexagon newTile;
+                if (selected == TileType.FullEdge || selected == TileType.HalfEdge)
+                {
+                    newTile = new Hexagon(selected, Direction.NNE, Transformer.WorldToPos(mousePos), MonoBehaviour.FindObjectOfType<TileHandler>());
+                }
+                else
+                {
+                    newTile = new Hexagon(selected, Direction.North, Transformer.WorldToPos(mousePos), MonoBehaviour.FindObjectOfType<TileHandler>());
+                }
+            }
+            status = MouseStatus.Neutral;
         }
     }
 }

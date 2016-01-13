@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<map>
+    <tile>
+        <pos_x>0</pos_x> <pos_y>0</pos_y>
+        <type>Empty</type> <dir>Empty</dir>
+    </tile>
+    <tile>
+        <pos_x>0</pos_x> <pos_y>1</pos_y>
+        <type>HalfCorner</type> <dir>WWN</dir>
+    </tile>
+    <tile>
+        <pos_x>-1</pos_x> <pos_y>0</pos_y>
+        <type>Empty</type> <dir>Empty</dir>
+    </tile>
+    <tile>
+        <pos_x>1</pos_x> <pos_y>0</pos_y>
+        <type>Empty</type> <dir>Empty</dir>
+    </tile>
+    <tile>
+        <pos_x>1</pos_x> <pos_y>1</pos_y>
+        <type>Empty</type> <dir>Empty</dir>
+    </tile>
+    <tile>
+        <pos_x>0</pos_x> <pos_y>2</pos_y>
+        <type>Empty</type> <dir>Empty</dir>
+    </tile>
+    <tile>
+        <pos_x>-1</pos_x> <pos_y>1</pos_y>
+        <type>Empty</type> <dir>Empty</dir>
+    </tile>
+    <start>
+        <pos_x>0</pos_x> <pos_y>-1</pos_y> <dir>North</dir>
+    </start>
+    <end>
+        <pos_x>3</pos_x> <pos_y>2</pos_y> <dir>NEE</dir>
+    </end>
+</map>

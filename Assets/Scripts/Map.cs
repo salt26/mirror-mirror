@@ -9,12 +9,14 @@ public class Map
     public Dictionary<Pos, Hexagon> tileset = new Dictionary<Pos, Hexagon>();
     public KeyValuePair<Pos, Direction> start, end;
 
+    public Map() { }
+
     public Map(string Filename)
     {
         TextAsset textAsset = Resources.Load("level/" + Filename) as TextAsset;
         if (textAsset == null)
         {
-            Debug.Log("No such Level");
+            Debug.Log("No such Level: " + Filename);
             return;
         }
         XmlDocument xmldoc = new XmlDocument();
@@ -28,7 +30,7 @@ public class Map
             tileset.Add(new Pos(x, y),
                 new Hexagon(Hexagon.ParseTileType(tile.SelectSingleNode("type").InnerText),
                 Hexagon.ParseDirection(tile.SelectSingleNode("dir").InnerText),
-                new Pos(x, y)));
+                new Pos(x, y), MonoBehaviour.FindObjectOfType<TileHandler>()));
         }
 
         XmlNode startNode = xmldoc.SelectSingleNode("map/start");

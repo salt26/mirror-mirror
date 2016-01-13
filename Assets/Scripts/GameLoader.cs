@@ -6,12 +6,12 @@ public class GameLoader : MonoBehaviour
 {
     public Map map;
     private Transform mapHolder;
-    public GameObject[] tiles;
+    public static string levelData;
 
     // Use this for initialization
     void Start()
     {
-        map = new Map("example");
+        map = new Map(levelData);
         mapHolder = new GameObject("Map").transform;
         foreach (Hexagon tile in map.tileset.Values)
         {

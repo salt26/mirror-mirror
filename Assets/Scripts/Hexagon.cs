@@ -7,11 +7,11 @@ public class Hexagon
     public Direction dir;
     public GameObject obj;
 
-    public Hexagon(TileType tile, Direction dir, Pos p)
+    public Hexagon(TileType tile, Direction dir, Pos p, TileHandler t)
     {
         this.tile = tile;
         this.dir = dir;
-        obj = MonoBehaviour.Instantiate(MonoBehaviour.FindObjectOfType<GameLoader>().tiles[(int)tile],
+        obj = MonoBehaviour.Instantiate(t.tiles[(int)tile],
                 Transformer.PosToWorld(p), Quaternion.AngleAxis(DirectionToDegree(dir), Vector3.back)) as GameObject;
     }
 
@@ -24,7 +24,6 @@ public class Hexagon
                 return DegreeToDirection(DirectionToDegree(dir) * 2 - DirectionToDegree(input) + 180);
             case TileType.HalfCorner:
             case TileType.HalfEdge:
-                MonoBehaviour.print(DirectionToDegree(input).ToString() + " " + DirectionToDegree(dir).ToString());
                 if (DegreeBetween(DirectionToDegree(input), DirectionToDegree(dir)) < 90)
                     return input;
                 else
