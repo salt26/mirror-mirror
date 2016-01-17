@@ -198,7 +198,7 @@ public class Hexagon
     }
 }
 
-public enum TileType { Empty, HalfCorner, HalfEdge, FullCorner, FullEdge }  // Half : 반거울, Full : 거울 / Corner : 꼭지점을 잇는 거울, Edge : 변의 중심을 잇는 거울
+public enum TileType { Empty, HalfCorner, HalfEdge, FullCorner, FullEdge, Start, End }  // Half : 반거울, Full : 거울 / Corner : 꼭지점을 잇는 거울, Edge : 변의 중심을 잇는 거울
 public enum Direction
 {
     Empty = 0,

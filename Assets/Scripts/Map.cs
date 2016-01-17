@@ -7,7 +7,7 @@ using System;
 public class Map
 {
     public Dictionary<Pos, Hexagon> tileset = new Dictionary<Pos, Hexagon>();
-    public KeyValuePair<Pos, Direction> start, end;
+    public KeyValuePair<Pos, Hexagon> start, end;
 
     public Map() { }
 
@@ -36,12 +36,14 @@ public class Map
         XmlNode startNode = xmldoc.SelectSingleNode("map/start");
         int start_x = Int32.Parse(startNode.SelectSingleNode("pos_x").InnerText);
         int start_y = Int32.Parse(startNode.SelectSingleNode("pos_y").InnerText);
-        start = new KeyValuePair<Pos, Direction>(new Pos(start_x, start_y), Hexagon.ParseDirection(startNode.SelectSingleNode("dir").InnerText));
+        start = new KeyValuePair<Pos, Hexagon>(new Pos(start_x, start_y),
+            new Hexagon(TileType.Start, Hexagon.ParseDirection(startNode.SelectSingleNode("dir").InnerText), new Pos(start_x, start_y), MonoBehaviour.FindObjectOfType<TileHandler>()));
 
         XmlNode endNode = xmldoc.SelectSingleNode("map/end");
         int end_x = Int32.Parse(endNode.SelectSingleNode("pos_x").InnerText);
         int end_y = Int32.Parse(endNode.SelectSingleNode("pos_y").InnerText);
-        end = new KeyValuePair<Pos, Direction>(new Pos(end_x, end_y), Hexagon.ParseDirection(endNode.SelectSingleNode("dir").InnerText));
+        end = new KeyValuePair<Pos, Hexagon>(new Pos(end_x, end_y),
+            new Hexagon(TileType.End, Hexagon.ParseDirection(endNode.SelectSingleNode("dir").InnerText), new Pos(end_x, end_y), MonoBehaviour.FindObjectOfType<TileHandler>()));
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Editor : MonoBehaviour
 {
@@ -12,8 +13,10 @@ public class Editor : MonoBehaviour
     private Vector3 start;
     public Direction dir;
     public ArrayList selectedTiles = new ArrayList();
-    public GameObject button;
+    public GameObject saveButton;
+    public GameObject playButton;
     public GameObject inputField;
+    public static bool play = false;
 
     // Use this for initialization
     void Start()
@@ -21,8 +24,7 @@ public class Editor : MonoBehaviour
         int i = 0;
         foreach (GameObject tile in tiles)
         {
-            // tile.transform.position = Camera.main.ScreenToWorldPoint( new Vector3(-Screen.width / 10f, 0f));
-            tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 1.3f * i);
+            tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 1.3f * i, -1f);
             i++;
         }
         if (levelData == null)
@@ -33,13 +35,43 @@ public class Editor : MonoBehaviour
         {
             map = new Map(levelData);
         }
-        button.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
+        saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
+        playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
         inputField.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (play)
+        {
+            ArrayList visited = new ArrayList();
+
+            Pos p, nextPos;
+            p = map.start.Key;
+            Direction dir = map.start.Value.dir;
+
+            while (true)
+            {
+                Hexagon next;
+                nextPos = Hexagon.NextTile(p, dir);
+                Debug.DrawLine(Transformer.PosToWorld(p), Transformer.PosToWorld(nextPos), Color.red);
+                if (nextPos.Equals(map.end.Key) && dir == map.end.Value.dir)
+                {
+                    // Clear
+                    Debug.Log("Level Clear");
+                    break;
+                }
+                if (map.tileset.TryGetValue(nextPos, out next))
+                {
+                    dir = next.Reflect(dir);
+                    p = nextPos;
+                    if (visited.Contains(new KeyValuePair<Pos, Direction>(p, dir))) break; // Loop
+                    visited.Add(new KeyValuePair<Pos, Direction>(p, dir));
+                }
+                else break;
+            }
+        }
         Vector3 mousePos = Input.mousePosition;
         if (Input.GetMouseButtonDown(0))
         {
@@ -68,7 +100,7 @@ public class Editor : MonoBehaviour
             }
             if (Editor.validSelected)
             {
-                if (status == MouseStatus.Clicked && Camera.main.ScreenToWorldPoint(mousePos).x > -Camera.main.orthographicSize * Screen.width / Screen.height + 4f)
+                if (status == MouseStatus.Clicked && mousePos.x > 120f)
                 {
                     if (!map.tileset.ContainsKey(Transformer.WorldToPos(mousePos)))
                     {
@@ -80,6 +112,15 @@ public class Editor : MonoBehaviour
                         else
                         {
                             newTile = new Hexagon(selected, Direction.North, Transformer.WorldToPos(mousePos), MonoBehaviour.FindObjectOfType<TileHandler>());
+                        }
+
+                        if (selected == TileType.Start)
+                        {
+                            map.start = new KeyValuePair<Pos, Hexagon>(Transformer.WorldToPos(mousePos), newTile);
+                        }
+                        else if (selected == TileType.End)
+                        {
+                            map.end = new KeyValuePair<Pos, Hexagon>(Transformer.WorldToPos(mousePos), newTile);
                         }
                         map.tileset.Add(Transformer.WorldToPos(mousePos), newTile);
                         foreach (GameObject tileoption in MonoBehaviour.FindObjectOfType<Editor>().tiles)
@@ -190,6 +231,24 @@ public class Editor : MonoBehaviour
                 tileoption.GetComponent<SpriteRenderer>().color = Color.white;
             }
             Editor.validSelected = false;
+        }
+
+        Vector3 camPos = Camera.main.transform.position;
+        if (Input.GetKey("up"))
+        {
+            Camera.main.transform.position = camPos + new Vector3(0f, 0.2f);
+        }
+        else if (Input.GetKey("down"))
+        {
+            Camera.main.transform.position = camPos - new Vector3(0f, 0.2f);
+        }
+        else if (Input.GetKey("left"))
+        {
+            Camera.main.transform.position = camPos - new Vector3(0.2f, 0f);
+        }
+        else if (Input.GetKey("right"))
+        {
+            Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
         }
     }
 }

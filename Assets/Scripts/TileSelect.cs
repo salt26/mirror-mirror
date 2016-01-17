@@ -34,6 +34,10 @@ public class TileSelect : MonoBehaviour
                 return TileType.FullEdge;
             case "halfedge":
                 return TileType.HalfEdge;
+            case "start":
+                return TileType.Start;
+            case "end":
+                return TileType.End;
             default:
                 return TileType.Empty;
         }

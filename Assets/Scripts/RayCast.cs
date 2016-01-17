@@ -19,14 +19,14 @@ public class RayCast : MonoBehaviour
 
         Pos p, nextPos;
         p = map.start.Key;
-        Direction dir = map.start.Value;
+        Direction dir = map.start.Value.dir;
 
         while (true)
         {
             Hexagon next;
             nextPos = Hexagon.NextTile(p, dir);
             Debug.DrawLine(Transformer.PosToWorld(p), Transformer.PosToWorld(nextPos), Color.red);
-            if (p.Equals(map.end.Key) && dir == map.end.Value)
+            if (nextPos.Equals(map.end.Key) && dir == map.end.Value.dir)
             {
                 // Clear
                 Debug.Log("Level Clear");
