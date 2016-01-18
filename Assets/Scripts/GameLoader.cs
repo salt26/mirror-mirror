@@ -7,6 +7,7 @@ public class GameLoader : MonoBehaviour
     public Map map;
     private Transform mapHolder;
     public static string levelData;
+    public GameObject undoButton;
 
     // Use this for initialization
     void Start()
@@ -17,6 +18,7 @@ public class GameLoader : MonoBehaviour
         {
             tile.obj.transform.SetParent(mapHolder);
         }
+        undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
     }
 
     // Update is called once per frame

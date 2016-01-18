@@ -15,6 +15,7 @@ public class Editor : MonoBehaviour
     public ArrayList selectedTiles = new ArrayList();
     public GameObject saveButton;
     public GameObject playButton;
+    public GameObject backButton;
     public GameObject inputField;
     public static bool play = false;
 
@@ -37,6 +38,7 @@ public class Editor : MonoBehaviour
         }
         saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
         playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
+        backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
         inputField.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
     }
 

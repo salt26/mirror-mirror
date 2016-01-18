@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class InputHandler : MonoBehaviour
 {
@@ -7,10 +8,11 @@ public class InputHandler : MonoBehaviour
     private Vector3 start;
     public ArrayList selectedTiles = new ArrayList();
     public Direction dir;
+    public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
 
     void Start()
     {
-
+        gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
     }
 
     void Update()
@@ -27,6 +29,7 @@ public class InputHandler : MonoBehaviour
                         tile.Flip(dir);
                     }
                 }
+                gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
                 selectedTiles.Clear();
                 foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
                 {
@@ -104,13 +107,45 @@ public class InputHandler : MonoBehaviour
             }
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > 2)
+        {
+            Camera.main.orthographicSize -= 0.5f;
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             Camera.main.orthographicSize += 0.5f;
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && Camera.main.orthographicSize > 2)
+
+        Vector3 camPos = Camera.main.transform.position;
+        if (Input.GetKey("up"))
         {
-            Camera.main.orthographicSize -= 0.5f;
+            Camera.main.transform.position = camPos + new Vector3(0f, 0.2f);
+        }
+        else if (Input.GetKey("down"))
+        {
+            Camera.main.transform.position = camPos - new Vector3(0f, 0.2f);
+        }
+        else if (Input.GetKey("left"))
+        {
+            Camera.main.transform.position = camPos - new Vector3(0.2f, 0f);
+        }
+        else if (Input.GetKey("right"))
+        {
+            Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
+        }
+    }
+
+    public void onUndoClick()
+    {
+        if (gameStack.Count > 0)
+        {
+            KeyValuePair<ArrayList, Direction> pop = gameStack.Pop();
+            ArrayList tiles = pop.Key;
+            Direction dir = pop.Value;
+            foreach (Hexagon tile in tiles)
+            {
+                tile.Flip(dir);
+            }
         }
     }
 
