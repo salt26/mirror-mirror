@@ -15,16 +15,20 @@ public class RayCast : MonoBehaviour
     void Update()
     {
         Map map = MonoBehaviour.FindObjectOfType<GameLoader>().map;
+        LineRenderer ray = MonoBehaviour.FindObjectOfType<GameLoader>().ray;
         ArrayList visited = new ArrayList();
+        ArrayList rayPoints = new ArrayList();
 
         Pos p, nextPos;
         p = map.start.Key;
         Direction dir = map.start.Value.dir;
+        rayPoints.Add(Transformer.PosToWorld(p));
 
         while (true)
         {
             Hexagon next;
             nextPos = Hexagon.NextTile(p, dir);
+            rayPoints.Add(Transformer.PosToWorld(nextPos));
             Debug.DrawLine(Transformer.PosToWorld(p), Transformer.PosToWorld(nextPos), Color.red);
             if (nextPos.Equals(map.end.Key) && dir == map.end.Value.dir)
             {
@@ -41,5 +45,8 @@ public class RayCast : MonoBehaviour
             }
             else break;
         }
+
+        ray.SetVertexCount(rayPoints.Count);
+        ray.SetPositions((Vector3[])(rayPoints.ToArray(typeof(Vector3))));
     }
 }
