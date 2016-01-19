@@ -20,7 +20,7 @@ public class GameLoader : MonoBehaviour
         {
             tile.obj.transform.SetParent(mapHolder);
         }
-        undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
+        //undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
         ClearUI.transform.localPosition = new Vector3(Screen.width * 3f, Screen.height * 3f); //Clear시 UI가 옮겨짐
         ray.SetVertexCount(1);
     }
