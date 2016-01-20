@@ -36,10 +36,12 @@ public class Editor : MonoBehaviour
         {
             map = new Map(levelData);
         }
+        /*
         saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
         playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
         backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
         inputField.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
+        */
     }
 
     // Update is called once per frame
