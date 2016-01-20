@@ -28,8 +28,8 @@ public class InputHandler : MonoBehaviour
                     {
                         tile.Flip(dir);
                     }
+                    gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
                 }
-                gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
                 selectedTiles.Clear();
                 foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
                 {
