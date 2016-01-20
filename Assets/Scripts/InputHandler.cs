@@ -6,7 +6,7 @@ public class InputHandler : MonoBehaviour
 {
     private MouseStatus status = MouseStatus.Neutral;
     private Vector3 start;
-    private bool isCleared = false;
+    private bool acceptInput = true;
     public ArrayList selectedTiles = new ArrayList();
     public Direction dir;
     public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
@@ -16,12 +16,13 @@ public class InputHandler : MonoBehaviour
     void Start()
     {
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
+        acceptInput = true;
     }
 
     void Update()
     {
         Vector3 mousePos = Input.mousePosition;
-        if (!isCleared)
+        if (acceptInput)
         {
             if (Input.GetMouseButtonUp(0))
             {
@@ -139,6 +140,17 @@ public class InputHandler : MonoBehaviour
         {
             Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
         }
+        // multitouch
+        if (Input.touchCount == 2)
+        {
+            Touch[] touch = Input.touches;
+            Camera.main.transform.position = Camera.main.transform.position - (Vector3) (touch[0].deltaPosition + touch[1].deltaPosition) * 2 * Camera.main.orthographicSize / Screen.height;
+            float prevTouchDistance = ((touch[0].position - touch[0].deltaPosition) - (touch[1].position - touch[1].deltaPosition)).magnitude;
+            float touchDistance = (touch[0].position - touch[1].position).magnitude;
+            Camera.main.orthographicSize *= prevTouchDistance / touchDistance;
+            if (Camera.main.orthographicSize < 2) Camera.main.orthographicSize = 2;
+        }
+
     }
 
     public void onUndoClick()
@@ -157,7 +169,7 @@ public class InputHandler : MonoBehaviour
 
     public void clearStage() // inputHandler가 들고 있게 함
     {
-        isCleared = true;
+        acceptInput = false;
         PlayUI.transform.localPosition = new Vector3(Screen.width * 3f, Screen.height * 3f); //Clear시 UI가 옮겨짐
         ClearUI.transform.localPosition = new Vector3(0, 0);
     }
