@@ -22,7 +22,7 @@ public class InputHandler : MonoBehaviour
     void Update()
     {
         Vector3 mousePos = Input.mousePosition;
-        if (acceptInput)
+        if (acceptInput && Input.touchCount <= 1)
         {
             if (Input.GetMouseButtonUp(0))
             {
@@ -145,10 +145,12 @@ public class InputHandler : MonoBehaviour
         {
             Touch[] touch = Input.touches;
             Camera.main.transform.position = Camera.main.transform.position - (Vector3) (touch[0].deltaPosition + touch[1].deltaPosition) * 2 * Camera.main.orthographicSize / Screen.height;
+            /*
             float prevTouchDistance = ((touch[0].position - touch[0].deltaPosition) - (touch[1].position - touch[1].deltaPosition)).magnitude;
             float touchDistance = (touch[0].position - touch[1].position).magnitude;
             Camera.main.orthographicSize *= prevTouchDistance / touchDistance;
             if (Camera.main.orthographicSize < 2) Camera.main.orthographicSize = 2;
+            */
         }
 
     }
