@@ -35,6 +35,8 @@ public class Editor : MonoBehaviour
         else
         {
             map = new Map(levelData);
+            map.tileset.Add(map.start.Key, map.start.Value);
+            map.tileset.Add(map.end.Key, map.end.Value);
         }
         saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
         playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
