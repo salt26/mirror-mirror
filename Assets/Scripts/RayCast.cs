@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class RayCast : MonoBehaviour
 {
-    public GameObject ClearUI; // RayCast에서 들고 있게 했지만 옮길 수 있음
     // Use this for initialization
     void Start()
     {
@@ -16,6 +15,7 @@ public class RayCast : MonoBehaviour
     {
         Map map = MonoBehaviour.FindObjectOfType<GameLoader>().map;
         LineRenderer ray = MonoBehaviour.FindObjectOfType<GameLoader>().ray;
+        InputHandler inputHandler = MonoBehaviour.FindObjectOfType<InputHandler>();
         ArrayList visited = new ArrayList();
         ArrayList rayPoints = new ArrayList();
 
@@ -34,7 +34,7 @@ public class RayCast : MonoBehaviour
             {
                 // Clear
                 Debug.Log("Level Clear");
-                ClearUI.transform.localPosition = new Vector3(0, 0);
+                inputHandler.clearStage();
                 break;
             }
             if (map.tileset.TryGetValue(nextPos, out next))
