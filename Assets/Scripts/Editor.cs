@@ -120,10 +120,26 @@ public class Editor : MonoBehaviour
 
                         if (selected == TileType.Start)
                         {
+                            try
+                            {
+                                DestroyObject(map.start.Value.obj);
+                                map.tileset.Remove(map.start.Key);
+                            }
+                            catch (System.Exception)
+                            {
+                            }
                             map.start = new KeyValuePair<Pos, Hexagon>(Transformer.WorldToPos(mousePos), newTile);
                         }
                         else if (selected == TileType.End)
                         {
+                            try
+                            {
+                                DestroyObject(map.end.Value.obj);
+                                map.tileset.Remove(map.end.Key);
+                            }
+                            catch (System.Exception)
+                            {
+                            }
                             map.end = new KeyValuePair<Pos, Hexagon>(Transformer.WorldToPos(mousePos), newTile);
                         }
                         map.tileset.Add(Transformer.WorldToPos(mousePos), newTile);
