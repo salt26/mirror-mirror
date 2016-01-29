@@ -17,7 +17,9 @@ public class Editor : MonoBehaviour
     public GameObject playButton;
     public GameObject backButton;
     public GameObject inputField;
+    public GameObject removeTileButton;
     public static bool play = false;
+    public static bool removeTile = false;
 
     // Use this for initialization
     void Start()
@@ -25,7 +27,7 @@ public class Editor : MonoBehaviour
         int i = 0;
         foreach (GameObject tile in tiles)
         {
-            tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 1.3f * i, -1f);
+            tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 1.2f * i, -1f);
             i++;
         }
         if (levelData == null)
@@ -42,6 +44,7 @@ public class Editor : MonoBehaviour
         playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
         backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
         inputField.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
+        removeTileButton.transform.localPosition = new Vector3(-Screen.width * 0.5f + 65f, -Screen.height * 0.5f + 50f);
     }
 
     // Update is called once per frame
@@ -79,6 +82,16 @@ public class Editor : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         if (Input.GetMouseButtonDown(0))
         {
+            if (removeTile)
+            {
+                Hexagon tile;
+                if (map.tileset.TryGetValue(Transformer.WorldToPos(mousePos), out tile))
+                {
+                    DestroyObject(tile.obj);
+                    map.tileset.Remove(Transformer.WorldToPos(mousePos));
+                }
+                removeTile = false;
+            }
             if (status == MouseStatus.Neutral)
             {
                 start = Transformer.PosToWorld(Transformer.WorldToPos(Input.mousePosition));
@@ -175,7 +188,7 @@ public class Editor : MonoBehaviour
                         Editor.validSelected = false;
                     }
                 }
-            }
+            } 
             status = MouseStatus.Neutral;
         }
 
