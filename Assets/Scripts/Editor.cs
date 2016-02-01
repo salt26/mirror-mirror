@@ -22,6 +22,7 @@ public class Editor : MonoBehaviour
     public static bool play = false;
     public static bool removeTile = false;
     public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
+    public LineRenderer ray;
 
     // Use this for initialization
     void Start()
@@ -56,16 +57,21 @@ public class Editor : MonoBehaviour
     {
         if (play)
         {
+            LineRenderer ray = MonoBehaviour.FindObjectOfType<Editor>().ray;
+            ray.enabled = true;
             ArrayList visited = new ArrayList();
+            ArrayList rayPoints = new ArrayList();
 
             Pos p, nextPos;
             p = map.start.Key;
             Direction dir = map.start.Value.dir;
+            rayPoints.Add(Transformer.PosToWorld(p));
 
             while (true)
             {
                 Hexagon next;
                 nextPos = Hexagon.NextTile(p, dir);
+                rayPoints.Add(Transformer.PosToWorld(nextPos));
                 Debug.DrawLine(Transformer.PosToWorld(p), Transformer.PosToWorld(nextPos), Color.red);
                 if (nextPos.Equals(map.end.Key) && dir == map.end.Value.dir)
                 {
@@ -82,6 +88,13 @@ public class Editor : MonoBehaviour
                 }
                 else break;
             }
+            ray.SetVertexCount(rayPoints.Count);
+            ray.SetPositions((Vector3[])(rayPoints.ToArray(typeof(Vector3))));
+        }
+        else
+        {
+            LineRenderer ray = MonoBehaviour.FindObjectOfType<Editor>().ray;
+            ray.enabled = false;
         }
         Vector3 mousePos = Input.mousePosition;
         if (Input.GetMouseButtonDown(0))
