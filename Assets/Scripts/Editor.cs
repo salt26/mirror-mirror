@@ -18,8 +18,10 @@ public class Editor : MonoBehaviour
     public GameObject backButton;
     public GameObject inputField;
     public GameObject removeTileButton;
+    public GameObject undoButton;
     public static bool play = false;
     public static bool removeTile = false;
+    public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
 
     // Use this for initialization
     void Start()
@@ -44,7 +46,9 @@ public class Editor : MonoBehaviour
         playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
         backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
         inputField.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
+        undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 90f);
         removeTileButton.transform.localPosition = new Vector3(-Screen.width * 0.5f + 65f, -Screen.height * 0.5f + 50f);
+        gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
     }
 
     // Update is called once per frame
@@ -108,6 +112,7 @@ public class Editor : MonoBehaviour
                     {
                         tile.Flip(dir);
                     }
+                    gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
                 }
                 selectedTiles.Clear();
                 foreach (Hexagon tile in map.tileset.Values)
@@ -282,6 +287,20 @@ public class Editor : MonoBehaviour
         else if (Input.GetKey("right"))
         {
             Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
+        }
+    }
+
+    public void onUndoClick()
+    {
+        if (gameStack.Count > 0)
+        {
+            KeyValuePair<ArrayList, Direction> pop = gameStack.Pop();
+            ArrayList tiles = pop.Key;
+            Direction dir = pop.Value;
+            foreach (Hexagon tile in tiles)
+            {
+                tile.Flip(dir);
+            }
         }
     }
 }
