@@ -26,7 +26,7 @@ public class InputHandler : MonoBehaviour
                 {
                     foreach (Hexagon tile in selectedTiles)
                     {
-                        tile.Flip(dir);
+                        StartCoroutine(Flip(tile, dir));
                     }
                     gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
                 }
@@ -144,8 +144,37 @@ public class InputHandler : MonoBehaviour
             Direction dir = pop.Value;
             foreach (Hexagon tile in tiles)
             {
-                tile.Flip(dir);
+                StartCoroutine(Flip(tile, Hexagon.DegreeToDirection(Hexagon.DirectionToDegree(dir) + 180)));
             }
+        }
+    }
+
+    IEnumerator Flip(Hexagon tile, Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.North:
+            case Direction.NEE:
+            case Direction.EES:
+            case Direction.South:
+            case Direction.SWW:
+            case Direction.WWN:
+                Direction originalDir = tile.dir;
+                tile.dir = Hexagon.DegreeToDirection(Hexagon.DirectionToDegree(dir) * 2 - Hexagon.DirectionToDegree(originalDir) + 180);
+                //int axisdig = (Hexagon.DirectionToDegree(tile.dir) - Hexagon.DirectionToDegree(originalDir) + 360) / 2 + Hexagon.DirectionToDegree(originalDir);
+                int axisdig = Hexagon.DirectionToDegree(dir) + 90;
+                Debug.Log(Hexagon.DirectionToDegree(originalDir) + "->" + Hexagon.DirectionToDegree(tile.dir) + " : " + axisdig);
+                float rotatesum = 0;
+                while (rotatesum < 180)
+                {
+                    tile.obj.transform.Rotate(new Vector3(Mathf.Sin(Mathf.Deg2Rad * axisdig), Mathf.Cos(Mathf.Deg2Rad * axisdig)) * Time.deltaTime * 100, Space.World);
+                    rotatesum += Time.deltaTime * 100;
+                    yield return null;
+                }
+                tile.obj.transform.rotation = Quaternion.AngleAxis(Hexagon.DirectionToDegree(tile.dir), Vector3.back);
+                break;
+            default:
+                break;
         }
     }
 
