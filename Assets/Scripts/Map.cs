@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System;
+using System.IO;
 
 public class Map
 {
@@ -13,14 +14,10 @@ public class Map
 
     public Map(string Filename)
     {
-        TextAsset textAsset = Resources.Load("level/" + Filename) as TextAsset;
-        if (textAsset == null)
-        {
-            Debug.Log("No such Level: " + Filename);
-            return;
-        }
+        StreamReader sr = new StreamReader(Application.dataPath + "/Resources/level/" + Filename + ".xml");
+        String textAsset = sr.ReadToEnd();
         XmlDocument xmldoc = new XmlDocument();
-        xmldoc.LoadXml(textAsset.text);
+        xmldoc.LoadXml(textAsset);
 
         XmlNodeList tiles = xmldoc.SelectNodes("map/tile");
         foreach (XmlNode tile in tiles)

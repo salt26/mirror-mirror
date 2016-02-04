@@ -34,7 +34,7 @@ public class RayCast : MonoBehaviour
             {
                 // Clear
                 Debug.Log("Level Clear");
-                ClearUI.transform.localPosition = new Vector3(0, 0);
+                // ClearUI.transform.localPosition = new Vector3(0, 0);
                 break;
             }
             if (map.tileset.TryGetValue(nextPos, out next))

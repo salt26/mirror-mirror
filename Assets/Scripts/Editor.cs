@@ -301,6 +301,15 @@ public class Editor : MonoBehaviour
         {
             Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
         }
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > 2)
+        {
+            Camera.main.orthographicSize -= 0.5f;
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            Camera.main.orthographicSize += 0.5f;
+        }
     }
 
     public void onUndoClick()
