@@ -9,10 +9,13 @@ public class InputHandler : MonoBehaviour
     public ArrayList selectedTiles = new ArrayList();
     public Direction dir;
     public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
+    public RayCast rayCast;
+    public bool allowInput = true;
 
     void Start()
     {
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
+        allowInput = true;
     }
 
     void Update()
@@ -38,7 +41,7 @@ public class InputHandler : MonoBehaviour
             }
             status = MouseStatus.Neutral;
         }
-        else if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(0) && allowInput)
         {
             Pos p = Transformer.WorldToPos(mousePos);
             if (MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.ContainsKey(p))
@@ -48,7 +51,7 @@ public class InputHandler : MonoBehaviour
             }
         }
 
-        if (status == MouseStatus.Clicked)
+        if (status == MouseStatus.Clicked && allowInput)
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mousePos);
             Debug.DrawLine(start, mouseWorldPos, Color.red);
@@ -133,11 +136,20 @@ public class InputHandler : MonoBehaviour
         {
             Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
         }
+
+        if (!rayCast.activeRay && allowInput)
+        {
+            rayCast.MakeRay();
+        }
+        else if (rayCast.activeRay && !allowInput)
+        {
+            rayCast.RemoveRay();
+        }
     }
 
     public void onUndoClick()
     {
-        if (gameStack.Count > 0)
+        if (gameStack.Count > 0 && allowInput)
         {
             KeyValuePair<ArrayList, Direction> pop = gameStack.Pop();
             ArrayList tiles = pop.Key;
@@ -167,11 +179,13 @@ public class InputHandler : MonoBehaviour
                 float rotatesum = 0;
                 while (rotatesum < 180)
                 {
+                    allowInput = false;
                     tile.obj.transform.Rotate(new Vector3(Mathf.Sin(Mathf.Deg2Rad * axisdig), Mathf.Cos(Mathf.Deg2Rad * axisdig)) * Time.deltaTime * 100, Space.World);
                     rotatesum += Time.deltaTime * 100;
                     yield return null;
                 }
                 tile.obj.transform.rotation = Quaternion.AngleAxis(Hexagon.DirectionToDegree(tile.dir), Vector3.back);
+                allowInput = true;
                 break;
             default:
                 break;

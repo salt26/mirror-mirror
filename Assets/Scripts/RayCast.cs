@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class RayCast : MonoBehaviour
 {
     public GameObject ClearUI; // RayCast에서 들고 있게 했지만 옮길 수 있음
+    public LineRenderer ray;
+    public bool activeRay = true;
+    Map map;
     // Use this for initialization
     void Start()
     {
@@ -14,8 +17,11 @@ public class RayCast : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Map map = MonoBehaviour.FindObjectOfType<GameLoader>().map;
-        LineRenderer ray = MonoBehaviour.FindObjectOfType<GameLoader>().ray;
+
+    }
+    public void MakeRay()
+    {
+        map = MonoBehaviour.FindObjectOfType<GameLoader>().map;
         ArrayList visited = new ArrayList();
         ArrayList rayPoints = new ArrayList();
 
@@ -49,5 +55,15 @@ public class RayCast : MonoBehaviour
 
         ray.SetVertexCount(rayPoints.Count);
         ray.SetPositions((Vector3[])(rayPoints.ToArray(typeof(Vector3))));
+        activeRay = true;
+        ray.enabled = true;
+    }
+    
+    public void RemoveRay()
+    {
+        ray.SetVertexCount(1);
+        ray.SetPosition(0, Vector3.zero);
+        activeRay = false;
+        ray.enabled = false;
     }
 }
