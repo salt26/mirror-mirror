@@ -10,6 +10,7 @@ public class InputHandler : MonoBehaviour
     public Direction dir;
     public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
     public RayCast rayCast;
+    public float flipTime = 0.5f; // Flip animation에 걸리는 시간
     public bool allowInput = true;
 
     void Start()
@@ -180,8 +181,8 @@ public class InputHandler : MonoBehaviour
                 while (rotatesum < 180)
                 {
                     allowInput = false;
-                    tile.obj.transform.Rotate(new Vector3(Mathf.Sin(Mathf.Deg2Rad * axisdig), Mathf.Cos(Mathf.Deg2Rad * axisdig)) * Time.deltaTime * 100, Space.World);
-                    rotatesum += Time.deltaTime * 100;
+                    tile.obj.transform.Rotate(new Vector3(Mathf.Sin(Mathf.Deg2Rad * axisdig), Mathf.Cos(Mathf.Deg2Rad * axisdig)) * Time.deltaTime * 180 / flipTime, Space.World);
+                    rotatesum += Time.deltaTime * 180 / flipTime;
                     yield return null;
                 }
                 tile.obj.transform.rotation = Quaternion.AngleAxis(Hexagon.DirectionToDegree(tile.dir), Vector3.back);
