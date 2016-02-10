@@ -70,7 +70,6 @@ public class SaveButtonHandler : MonoBehaviour
             {
                 xmldoc.AppendChild(wrapper);
                 xmldoc.Save(filepath);
-                SceneManager.LoadScene("map_select");
             }
             else
             {

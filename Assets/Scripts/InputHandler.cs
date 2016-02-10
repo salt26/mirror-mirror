@@ -9,10 +9,14 @@ public class InputHandler : MonoBehaviour
     public ArrayList selectedTiles = new ArrayList();
     public Direction dir;
     public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
+    public RayCast rayCast;
+    public float flipTime = 0.5f; // Flip animation에 걸리는 시간
+    public bool allowInput = true;
 
     void Start()
     {
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
+        allowInput = true;
     }
 
     void Update()
@@ -26,7 +30,7 @@ public class InputHandler : MonoBehaviour
                 {
                     foreach (Hexagon tile in selectedTiles)
                     {
-                        tile.Flip(dir);
+                        StartCoroutine(Flip(tile, dir));
                     }
                     gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
                 }
@@ -38,7 +42,7 @@ public class InputHandler : MonoBehaviour
             }
             status = MouseStatus.Neutral;
         }
-        else if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(0) && allowInput)
         {
             Pos p = Transformer.WorldToPos(mousePos);
             if (MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.ContainsKey(p))
@@ -48,7 +52,7 @@ public class InputHandler : MonoBehaviour
             }
         }
 
-        if (status == MouseStatus.Clicked)
+        if (status == MouseStatus.Clicked && allowInput)
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mousePos);
             Debug.DrawLine(start, mouseWorldPos, Color.red);
@@ -133,19 +137,59 @@ public class InputHandler : MonoBehaviour
         {
             Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
         }
+
+        if (!rayCast.activeRay && allowInput)
+        {
+            rayCast.MakeRay();
+        }
+        else if (rayCast.activeRay && !allowInput)
+        {
+            rayCast.RemoveRay();
+        }
     }
 
     public void onUndoClick()
     {
-        if (gameStack.Count > 0)
+        if (gameStack.Count > 0 && allowInput)
         {
             KeyValuePair<ArrayList, Direction> pop = gameStack.Pop();
             ArrayList tiles = pop.Key;
             Direction dir = pop.Value;
             foreach (Hexagon tile in tiles)
             {
-                tile.Flip(dir);
+                StartCoroutine(Flip(tile, Hexagon.DegreeToDirection(Hexagon.DirectionToDegree(dir) + 180)));
             }
+        }
+    }
+
+    IEnumerator Flip(Hexagon tile, Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.North:
+            case Direction.NEE:
+            case Direction.EES:
+            case Direction.South:
+            case Direction.SWW:
+            case Direction.WWN:
+                Direction originalDir = tile.dir;
+                tile.dir = Hexagon.DegreeToDirection(Hexagon.DirectionToDegree(dir) * 2 - Hexagon.DirectionToDegree(originalDir) + 180);
+                //int axisdig = (Hexagon.DirectionToDegree(tile.dir) - Hexagon.DirectionToDegree(originalDir) + 360) / 2 + Hexagon.DirectionToDegree(originalDir);
+                int axisdig = Hexagon.DirectionToDegree(dir) + 90;
+                Debug.Log(Hexagon.DirectionToDegree(originalDir) + "->" + Hexagon.DirectionToDegree(tile.dir) + " : " + axisdig);
+                float rotatesum = 0;
+                while (rotatesum < 180)
+                {
+                    allowInput = false;
+                    tile.obj.transform.Rotate(new Vector3(Mathf.Sin(Mathf.Deg2Rad * axisdig), Mathf.Cos(Mathf.Deg2Rad * axisdig)) * Time.deltaTime * 180 / flipTime, Space.World);
+                    rotatesum += Time.deltaTime * 180 / flipTime;
+                    yield return null;
+                }
+                tile.obj.transform.rotation = Quaternion.AngleAxis(Hexagon.DirectionToDegree(tile.dir), Vector3.back);
+                allowInput = true;
+                break;
+            default:
+                break;
         }
     }
 

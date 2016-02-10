@@ -11,11 +11,12 @@ public class MapLoader : MonoBehaviour
     void Start()
     {
         Debug.Log(Application.dataPath);
-        TextAsset[] levels = Resources.LoadAll<TextAsset>("level");
+        DirectoryInfo dir = new DirectoryInfo(Application.dataPath + "/Resources/level");
+        FileInfo[] levels = dir.GetFiles("*.xml");
         List<string> nameList = new List<string>();
-        foreach (TextAsset level in levels)
+        foreach (FileInfo level in levels)
         {
-            nameList.Add(Path.GetFileNameWithoutExtension(level.name));
+            nameList.Add(Path.GetFileNameWithoutExtension(level.Name));
         }
         mapList.ClearOptions();
         mapList.AddOptions(nameList);
