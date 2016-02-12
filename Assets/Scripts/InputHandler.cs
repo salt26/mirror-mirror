@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class InputHandler : MonoBehaviour
 {
@@ -10,13 +11,17 @@ public class InputHandler : MonoBehaviour
     public Direction dir;
     public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
     public RayCast rayCast;
+    public Text flipStatus;
     public float flipTime = 0.5f; // Flip animation에 걸리는 시간
     public bool allowInput = true;
+    int flip;
 
     void Start()
     {
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
         allowInput = true;
+        flip = 0;
+        flipStatus.text = flip + " / " + FindObjectOfType<GameLoader>().map.maxFlip.ToString();
     }
 
     void Update()
@@ -26,13 +31,15 @@ public class InputHandler : MonoBehaviour
         {
             if (status == MouseStatus.Clicked)
             {
-                if (selectedTiles.Count > 1)
+                if (selectedTiles.Count > 1 && flip < FindObjectOfType<GameLoader>().map.maxFlip)
                 {
                     foreach (Hexagon tile in selectedTiles)
                     {
                         StartCoroutine(Flip(tile, dir));
                     }
                     gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
+                    flip++;
+                    flipStatus.text = flip + " / " + FindObjectOfType<GameLoader>().map.maxFlip.ToString();
                 }
                 selectedTiles.Clear();
                 foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
@@ -160,6 +167,8 @@ public class InputHandler : MonoBehaviour
             {
                 StartCoroutine(Flip(tile, Hexagon.DegreeToDirection(Hexagon.DirectionToDegree(dir) + 180)));
             }
+            flip--;
+            flipStatus.text = flip + " / " + FindObjectOfType<GameLoader>().map.maxFlip.ToString();
         }
     }
 

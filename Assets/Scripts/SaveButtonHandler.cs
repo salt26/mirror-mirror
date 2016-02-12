@@ -4,23 +4,35 @@ using System.Collections.Generic;
 using System.Xml;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SaveButtonHandler : MonoBehaviour
 {
+    public Text mapNameInputField;
+    public Text maxFlipInputField;
+
     public void onClick()
     {
         Map map = MonoBehaviour.FindObjectOfType<Editor>().map;
-        string filename = MonoBehaviour.FindObjectOfType<UnityEngine.UI.InputField>().text.ToString();
+        string filename = mapNameInputField.text.ToString();
+        int maxFlip;
         bool start = false, end = false;
         if (filename == "")
         {
             Debug.LogError("Filename is Empty");
+        }
+        else if (!Int32.TryParse(maxFlipInputField.text.ToString(), out maxFlip))
+        {
+            Debug.LogError("Invalid number of Max Flip");
         }
         else {
             XmlDocument xmldoc = new XmlDocument();
             string filepath = Application.dataPath.ToString() + "/Resources/level/" + filename + ".xml";
             Debug.Log(filepath);
             XmlElement wrapper = xmldoc.CreateElement("map");
+            XmlElement maxFlipElem = xmldoc.CreateElement("flip");
+            maxFlipElem.InnerText = maxFlip.ToString();
+            wrapper.AppendChild(maxFlipElem);
             foreach (Pos p in map.tileset.Keys)
             {
                 Hexagon tile;

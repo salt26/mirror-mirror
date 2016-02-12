@@ -21,8 +21,6 @@ public class GameLoader : MonoBehaviour
         {
             tile.obj.transform.SetParent(mapHolder);
         }
-        undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
-        backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
         ClearUI.transform.localPosition = new Vector3(Screen.width * 3f, Screen.height * 3f); //Clear시 UI가 옮겨짐
         // rayCast.ray.SetVertexCount(1);
         // rayCast.MakeRayLine();

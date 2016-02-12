@@ -16,7 +16,8 @@ public class Editor : MonoBehaviour
     public GameObject saveButton;
     public GameObject playButton;
     public GameObject backButton;
-    public GameObject inputField;
+    public GameObject mapName;
+    public GameObject maxFlip;
     public GameObject removeTileButton;
     public GameObject undoButton;
     public static bool play = false;
@@ -43,10 +44,11 @@ public class Editor : MonoBehaviour
             map.tileset.Add(map.start.Key, map.start.Value);
             map.tileset.Add(map.end.Key, map.end.Value);
         }
-        saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
-        playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
-        backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
-        inputField.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
+        saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
+        playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
+        backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -90f);
+        mapName.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
+        maxFlip.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
         undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 90f);
         removeTileButton.transform.localPosition = new Vector3(-Screen.width * 0.5f + 65f, -Screen.height * 0.5f + 50f);
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
