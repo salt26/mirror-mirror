@@ -140,7 +140,8 @@ public class InputHandler : MonoBehaviour
 
         if (!rayCast.activeRay && allowInput)
         {
-            rayCast.MakeRay();
+            //rayCast.MakeRayLine();
+            rayCast.MakeLaserSprite();
         }
         else if (rayCast.activeRay && !allowInput)
         {

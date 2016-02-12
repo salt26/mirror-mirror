@@ -24,8 +24,9 @@ public class GameLoader : MonoBehaviour
         undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
         backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
         ClearUI.transform.localPosition = new Vector3(Screen.width * 3f, Screen.height * 3f); //Clear시 UI가 옮겨짐
-        rayCast.ray.SetVertexCount(1);
-        rayCast.MakeRay();
+        // rayCast.ray.SetVertexCount(1);
+        // rayCast.MakeRayLine();
+        rayCast.MakeLaserSprite();
     }
 
     // Update is called once per frame
