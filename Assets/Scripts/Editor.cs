@@ -52,6 +52,29 @@ public class Editor : MonoBehaviour
         undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 90f);
         removeTileButton.transform.localPosition = new Vector3(-Screen.width * 0.5f + 65f, -Screen.height * 0.5f + 50f);
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
+
+        double minLength = double.PositiveInfinity;
+        Pos center = new Pos(0, 0);
+        foreach(Pos p in map.tileset.Keys)
+        {
+            double maxLength = 0f;
+            foreach(Pos other_p in map.tileset.Keys)
+            {
+                if (p.Equals(other_p)) continue;
+                if (Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p)) > maxLength)
+                {
+                    maxLength = Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p));
+                }
+            }
+            if (maxLength < minLength)
+            {
+                minLength = maxLength;
+                center = p;
+            }
+        }
+        Vector3 initCamPos = Transformer.PosToWorld(center);
+        initCamPos.z = -5f;
+        Camera.main.transform.position = initCamPos;
     }
 
     // Update is called once per frame
