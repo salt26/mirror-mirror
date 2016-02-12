@@ -97,9 +97,19 @@ public class RayCast : MonoBehaviour
                 if (visited.Contains(new KeyValuePair<Pos, Direction>(p, dir))) break; // Loop
                 visited.Add(new KeyValuePair<Pos, Direction>(p, dir));
             }
-            else break;
+            else
+            {
+                newLaser.position = (Transformer.PosToWorld(p) * 3 + Transformer.PosToWorld(nextPos)) / 4 + (Vector3.back * 0.2f);
+                newLaser.localScale = new Vector3(newLaser.localScale.x, newLaser.localScale.y *0.5f);
+                break;
+            }
         }
-        
+        for (int i = 0; i < laserList.Count; i++)
+        {
+            SpriteRenderer render = laserList[i].GetComponent<SpriteRenderer>();
+            render.color = new Color(1, 1.0f * i / Mathf.Max(20, laserList.Count), 0);
+            render.sortingOrder = i;
+        }
         activeRay = true;
     }
 
