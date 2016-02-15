@@ -29,9 +29,12 @@ public class Editor : MonoBehaviour
     void Start()
     {
         int i = 0;
+        Camera.main.orthographicSize = 8f;
         foreach (GameObject tile in tiles)
         {
-            tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 1.2f * i, -1f);
+            // tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 2f * i, -1f);
+            tile.transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0.1f, 0.12f * i + 0.2f, 4f));
+            tile.transform.localScale = new Vector3(Camera.main.orthographicSize / 5f, Camera.main.orthographicSize/5f);
             i++;
         }
         if (levelData == null)
@@ -69,6 +72,7 @@ public class Editor : MonoBehaviour
             Pos localFarthest = new Pos(0, 0);
             foreach(Pos other_p in tileList)
             {
+                if (p == null) break;
                 if (p.Equals(other_p)) continue;
                 if (Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p)) > maxLength)
                 {
@@ -83,10 +87,10 @@ public class Editor : MonoBehaviour
                 farthest = localFarthest;
             }
         }
-        Vector3 initCamPos = Transformer.PosToWorld(center);
+        Vector3 initCamPos = new Vector3(0f, 0f);
+        if (center != null) initCamPos = Transformer.PosToWorld(center);
         initCamPos.z = -5f;
         Camera.main.transform.position = initCamPos;
-        Camera.main.orthographicSize = 8f;
     }
 
     // Update is called once per frame
@@ -172,7 +176,7 @@ public class Editor : MonoBehaviour
             }
             if (Editor.validSelected)
             {
-                if (status == MouseStatus.Clicked && mousePos.x > 120f)
+                if (status == MouseStatus.Clicked && Camera.main.ScreenToViewportPoint(mousePos).x > 0.15f)
                 {
                     if (!map.tileset.ContainsKey(Transformer.WorldToPos(mousePos)))
                     {
@@ -342,10 +346,24 @@ public class Editor : MonoBehaviour
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > 2)
         {
             Camera.main.orthographicSize -= 0.5f;
+            int i = 0;
+            foreach (GameObject tile in tiles)
+            {
+                tile.transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0.1f, 0.12f * i + 0.2f, 4f));
+                tile.transform.localScale = new Vector3(Camera.main.orthographicSize / 5f, Camera.main.orthographicSize/5f);
+                i++;
+            }
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             Camera.main.orthographicSize += 0.5f;
+            int i = 0;
+            foreach (GameObject tile in tiles)
+            {
+                tile.transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0.1f, 0.12f * i + 0.2f, 4f));
+                tile.transform.localScale = new Vector3(Camera.main.orthographicSize / 5f, Camera.main.orthographicSize/5f);
+                i++;
+            }
         }
     }
 
