@@ -9,6 +9,7 @@ public class Map
 {
     public Dictionary<Pos, Hexagon> tileset = new Dictionary<Pos, Hexagon>();
     public KeyValuePair<Pos, Hexagon> start, end;
+    public int maxFlip;
 
     public Map() { }
 
@@ -41,6 +42,9 @@ public class Map
         int end_y = Int32.Parse(endNode.SelectSingleNode("pos_y").InnerText);
         end = new KeyValuePair<Pos, Hexagon>(new Pos(end_x, end_y),
             new Hexagon(TileType.End, Hexagon.ParseDirection(endNode.SelectSingleNode("dir").InnerText), new Pos(end_x, end_y), MonoBehaviour.FindObjectOfType<TileHandler>()));
+
+        XmlNode maxFlipNode = xmldoc.SelectSingleNode("map/flip");
+        maxFlip = Int32.Parse(maxFlipNode.InnerText);
     }
 }
 

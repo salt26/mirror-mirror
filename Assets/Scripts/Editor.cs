@@ -16,7 +16,8 @@ public class Editor : MonoBehaviour
     public GameObject saveButton;
     public GameObject playButton;
     public GameObject backButton;
-    public GameObject inputField;
+    public GameObject mapName;
+    public GameObject maxFlip;
     public GameObject removeTileButton;
     public GameObject undoButton;
     public static bool play = false;
@@ -43,13 +44,49 @@ public class Editor : MonoBehaviour
             map.tileset.Add(map.start.Key, map.start.Value);
             map.tileset.Add(map.end.Key, map.end.Value);
         }
-        saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
-        playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
-        backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
-        inputField.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
+        saveButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
+        playButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -60f);
+        backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -90f);
+        mapName.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 30f);
+        maxFlip.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
         undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 90f);
         removeTileButton.transform.localPosition = new Vector3(-Screen.width * 0.5f + 65f, -Screen.height * 0.5f + 50f);
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
+
+        double minLength = double.PositiveInfinity;
+        Pos center = new Pos(0, 0);
+        Pos farthest = new Pos(0, 0);
+        ArrayList tileList = new ArrayList();
+        foreach(Pos p in map.tileset.Keys)
+        {
+            tileList.Add(p);
+        }
+        tileList.Add(map.start.Key);
+        tileList.Add(map.end.Key);
+        foreach(Pos p in tileList)
+        {
+            double maxLength = 0f;
+            Pos localFarthest = new Pos(0, 0);
+            foreach(Pos other_p in tileList)
+            {
+                if (p.Equals(other_p)) continue;
+                if (Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p)) > maxLength)
+                {
+                    maxLength = Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p));
+                    localFarthest = other_p;
+                }
+            }
+            if (maxLength < minLength)
+            {
+                minLength = maxLength;
+                center = p;
+                farthest = localFarthest;
+            }
+        }
+        Vector3 initCamPos = Transformer.PosToWorld(center);
+        initCamPos.z = -5f;
+        Camera.main.transform.position = initCamPos;
+        Camera.main.orthographicSize = 8f;
     }
 
     // Update is called once per frame

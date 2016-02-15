@@ -10,10 +10,12 @@ public class RayCast : MonoBehaviour
     public bool activeRay = true;
     Map map;
     List<Transform> laserList = new List<Transform>();
+    public static bool isClear;
+
     // Use this for initialization
     void Start()
     {
-
+        isClear = false;
     }
 
     // Update is called once per frame
@@ -42,11 +44,15 @@ public class RayCast : MonoBehaviour
             {
                 // Clear
                 Debug.Log("Level Clear");
-                // ClearUI.transform.localPosition = new Vector3(0, 0);
+                // ClearUI.transform.position = new Vector3(0, 0);
                 break;
             }
             if (map.tileset.TryGetValue(nextPos, out next))
             {
+                if (next.Reflect(dir) == Direction.Empty)
+                {
+                    break;
+                }
                 dir = next.Reflect(dir);
                 p = nextPos;
                 if (visited.Contains(new KeyValuePair<Pos, Direction>(p, dir))) break; // Loop
@@ -79,7 +85,7 @@ public class RayCast : MonoBehaviour
             Debug.DrawLine(Transformer.PosToWorld(p), Transformer.PosToWorld(nextPos), Color.red);
             Transform newLaser = (Transform) Instantiate(
                 laserPrefab, 
-                (Transformer.PosToWorld(p) + Transformer.PosToWorld(nextPos)) / 2 + (Vector3.back * 0.2f), 
+                (Transformer.PosToWorld(p) + Transformer.PosToWorld(nextPos)) / 2 + (Vector3.back * 0.2f) + (new Vector3(0f, 0f, 0.1f)), 
                 Quaternion.AngleAxis(Hexagon.DirectionToDegree(dir), Vector3.back));
             laserList.Add(newLaser);
             newLaser.parent = ray.transform;
@@ -87,11 +93,18 @@ public class RayCast : MonoBehaviour
             {
                 // Clear
                 Debug.Log("Level Clear");
-                // ClearUI.transform.localPosition = new Vector3(0, 0);
+                ClearUI.SetActive(true);
+                isClear = true;
                 break;
             }
             if (map.tileset.TryGetValue(nextPos, out next))
             {
+                if (next.Reflect(dir) == Direction.Empty)
+                {
+                    newLaser.position = (Transformer.PosToWorld(p) * 3 + Transformer.PosToWorld(nextPos)) / 4 + (Vector3.back * 0.2f) + (new Vector3(0f, 0f, 0.1f));
+                    newLaser.localScale = new Vector3(newLaser.localScale.x, newLaser.localScale.y *0.5f);
+                    break;
+                }
                 dir = next.Reflect(dir);
                 p = nextPos;
                 if (visited.Contains(new KeyValuePair<Pos, Direction>(p, dir))) break; // Loop
@@ -99,7 +112,7 @@ public class RayCast : MonoBehaviour
             }
             else
             {
-                newLaser.position = (Transformer.PosToWorld(p) * 3 + Transformer.PosToWorld(nextPos)) / 4 + (Vector3.back * 0.2f);
+                newLaser.position = (Transformer.PosToWorld(p) * 3 + Transformer.PosToWorld(nextPos)) / 4 + (Vector3.back * 0.2f) + (new Vector3(0f, 0f, 0.1f));
                 newLaser.localScale = new Vector3(newLaser.localScale.x, newLaser.localScale.y *0.5f);
                 break;
             }

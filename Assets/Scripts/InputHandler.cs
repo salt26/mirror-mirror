@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class InputHandler : MonoBehaviour
 {
@@ -10,40 +11,95 @@ public class InputHandler : MonoBehaviour
     public Direction dir;
     public Stack<KeyValuePair<ArrayList, Direction>> gameStack;
     public RayCast rayCast;
+    public Text flipStatus;
     public float flipTime = 0.5f; // Flip animation에 걸리는 시간
     public bool allowInput = true;
+    Vector3 clickPos;
+    Vector3 camPosBoth;
+    int flip;
 
     void Start()
     {
         gameStack = new Stack<KeyValuePair<ArrayList, Direction>>();
         allowInput = true;
+        flip = 0;
+        flipStatus.text = flip + " / " + FindObjectOfType<GameLoader>().map.maxFlip.ToString();
     }
 
     void Update()
     {
         Vector3 mousePos = Input.mousePosition;
+        if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+        {
+            if (status != MouseStatus.Both)
+            {
+                clickPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                camPosBoth = Camera.main.transform.position;
+                status = MouseStatus.Both;
+            }
+            else
+            {
+                Camera.main.transform.position = camPosBoth - (Camera.main.ScreenToViewportPoint(Input.mousePosition) - clickPos) * Camera.main.orthographicSize * 2f;
+            }
+            return;
+        }
+        else
+        {
+            if(status == MouseStatus.Both) status = MouseStatus.Neutral;
+        }
+
         if (Input.GetMouseButtonUp(0))
         {
+            if (RayCast.isClear) return;
             if (status == MouseStatus.Clicked)
             {
-                if (selectedTiles.Count > 1)
+                bool isSame = true;
+                if (gameStack.Count == 0)
+                {
+                    isSame = false;
+                }
+                else {
+                    ArrayList before = gameStack.Peek().Key as ArrayList;
+                    foreach (Hexagon tile in before)
+                    {
+                        if (!selectedTiles.Contains(tile)) isSame = false;
+                    }
+                    foreach (Hexagon tile in selectedTiles)
+                    {
+                        if (!before.Contains(tile)) isSame = false;
+                    }
+                }
+
+                if (selectedTiles.Count > 1 && (flip < FindObjectOfType<GameLoader>().map.maxFlip || isSame) )
                 {
                     foreach (Hexagon tile in selectedTiles)
                     {
                         StartCoroutine(Flip(tile, dir));
                     }
-                    gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
+
+                    if (isSame)
+                    {
+                        gameStack.Pop();
+                        flip--;
+                    }
+                    else {
+                        gameStack.Push(new KeyValuePair<ArrayList, Direction>(selectedTiles.Clone() as ArrayList, dir));
+                        flip++;
+                    }
+                    flipStatus.text = flip + " / " + FindObjectOfType<GameLoader>().map.maxFlip.ToString();
                 }
                 selectedTiles.Clear();
                 foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
                 {
-                    tile.obj.GetComponent<SpriteRenderer>().color = Color.white;
+                    // tile.obj.GetComponent<SpriteRenderer>().color = Color.white;
+                    tile.obj.GetComponentInChildren<TileHilighter>().Dehilight();
                 }
             }
             status = MouseStatus.Neutral;
         }
         else if (Input.GetMouseButtonDown(0) && allowInput)
         {
+            if (RayCast.isClear) return;
             Pos p = Transformer.WorldToPos(mousePos);
             if (MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.ContainsKey(p))
             {
@@ -95,19 +151,22 @@ public class InputHandler : MonoBehaviour
             Pos pos = Transformer.WorldToPos(Camera.main.WorldToScreenPoint(start));
             foreach (Hexagon t in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
             {
-                t.obj.GetComponent<SpriteRenderer>().color = Color.white;
+                // t.obj.GetComponent<SpriteRenderer>().color = Color.white;
+                t.obj.GetComponentInChildren<TileHilighter>().Dehilight();
             }
             selectedTiles.Clear();
             while (!pos.Equals(Transformer.WorldToPos(Camera.main.WorldToScreenPoint(end))) && MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.TryGetValue(pos, out tile))
             {
                 selectedTiles.Add(tile);
-                tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+                // tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+                tile.obj.GetComponentInChildren<TileHilighter>().Hilight();
                 pos = Hexagon.NextTile(pos, dir);
             }
             if (MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.TryGetValue(pos, out tile))
             {
                 selectedTiles.Add(tile);
-                tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+                // tile.obj.GetComponent<SpriteRenderer>().color = Color.yellow;
+                tile.obj.GetComponentInChildren<TileHilighter>().Hilight();
             }
         }
 
@@ -123,19 +182,19 @@ public class InputHandler : MonoBehaviour
         Vector3 camPos = Camera.main.transform.position;
         if (Input.GetKey("up"))
         {
-            Camera.main.transform.position = camPos + new Vector3(0f, 0.2f);
+            Camera.main.transform.position = camPos + new Vector3(0f, 0.08f);
         }
         else if (Input.GetKey("down"))
         {
-            Camera.main.transform.position = camPos - new Vector3(0f, 0.2f);
+            Camera.main.transform.position = camPos - new Vector3(0f, 0.08f);
         }
         else if (Input.GetKey("left"))
         {
-            Camera.main.transform.position = camPos - new Vector3(0.2f, 0f);
+            Camera.main.transform.position = camPos - new Vector3(0.08f, 0f);
         }
         else if (Input.GetKey("right"))
         {
-            Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
+            Camera.main.transform.position = camPos + new Vector3(0.08f, 0f);
         }
 
         if (!rayCast.activeRay && allowInput)
@@ -151,6 +210,7 @@ public class InputHandler : MonoBehaviour
 
     public void onUndoClick()
     {
+        if (RayCast.isClear) return;
         if (gameStack.Count > 0 && allowInput)
         {
             KeyValuePair<ArrayList, Direction> pop = gameStack.Pop();
@@ -160,6 +220,8 @@ public class InputHandler : MonoBehaviour
             {
                 StartCoroutine(Flip(tile, Hexagon.DegreeToDirection(Hexagon.DirectionToDegree(dir) + 180)));
             }
+            flip--;
+            flipStatus.text = flip + " / " + FindObjectOfType<GameLoader>().map.maxFlip.ToString();
         }
     }
 
@@ -196,4 +258,4 @@ public class InputHandler : MonoBehaviour
 
 }
 
-public enum MouseStatus { Neutral, Clicked }
+public enum MouseStatus { Neutral, Clicked, Both }

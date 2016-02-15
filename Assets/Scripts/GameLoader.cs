@@ -9,7 +9,6 @@ public class GameLoader : MonoBehaviour
     public static string levelData;
     public GameObject undoButton;
     public GameObject backButton;
-    public GameObject ClearUI;
     public RayCast rayCast;
 
     // Use this for initialization
@@ -21,12 +20,44 @@ public class GameLoader : MonoBehaviour
         {
             tile.obj.transform.SetParent(mapHolder);
         }
-        undoButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, 0f);
-        backButton.transform.localPosition = new Vector3(Screen.width * 0.5f - 160f, -30f);
-        ClearUI.transform.localPosition = new Vector3(Screen.width * 3f, Screen.height * 3f); //Clear시 UI가 옮겨짐
         // rayCast.ray.SetVertexCount(1);
         // rayCast.MakeRayLine();
         rayCast.MakeLaserSprite();
+
+        double minLength = double.PositiveInfinity;
+        Pos center = new Pos(0, 0);
+        Pos farthest = new Pos(0, 0);
+        ArrayList tileList = new ArrayList();
+        foreach(Pos p in map.tileset.Keys)
+        {
+            tileList.Add(p);
+        }
+        tileList.Add(map.start.Key);
+        tileList.Add(map.end.Key);
+        foreach(Pos p in tileList)
+        {
+            double maxLength = 0f;
+            Pos localFarthest = new Pos(0, 0);
+            foreach(Pos other_p in tileList)
+            {
+                if (p.Equals(other_p)) continue;
+                if (Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p)) > maxLength)
+                {
+                    maxLength = Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p));
+                    localFarthest = other_p;
+                }
+            }
+            if (maxLength < minLength)
+            {
+                minLength = maxLength;
+                center = p;
+                farthest = localFarthest;
+            }
+        }
+        Vector3 initCamPos = Transformer.PosToWorld(center);
+        initCamPos.z = -5f;
+        Camera.main.transform.position = initCamPos;
+        Camera.main.orthographicSize = 8f;
     }
 
     // Update is called once per frame
