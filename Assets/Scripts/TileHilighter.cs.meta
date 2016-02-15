@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f68c436026488f94fa8081d1141a3d40
+timeCreated: 1455538155
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - tileMat: {fileID: 2100000, guid: e551a9457aaa56c4481feaeb1868cb29, type: 2}
+  - hilightMat: {fileID: 2100000, guid: 4d7fa0565c03dc04bb78634752e89fda, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
