@@ -182,19 +182,19 @@ public class InputHandler : MonoBehaviour
         Vector3 camPos = Camera.main.transform.position;
         if (Input.GetKey("up"))
         {
-            Camera.main.transform.position = camPos + new Vector3(0f, 0.08f);
+            Camera.main.transform.position = camPos + new Vector3(0f, 6f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
-        else if (Input.GetKey("down"))
+        if (Input.GetKey("down"))
         {
-            Camera.main.transform.position = camPos - new Vector3(0f, 0.08f);
+            Camera.main.transform.position = camPos - new Vector3(0f, 6f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
-        else if (Input.GetKey("left"))
+        if (Input.GetKey("left"))
         {
-            Camera.main.transform.position = camPos - new Vector3(0.08f, 0f);
+            Camera.main.transform.position = camPos - new Vector3(6f, 0f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
-        else if (Input.GetKey("right"))
+        if (Input.GetKey("right"))
         {
-            Camera.main.transform.position = camPos + new Vector3(0.08f, 0f);
+            Camera.main.transform.position = camPos + new Vector3(6f, 0f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
 
         if (!rayCast.activeRay && allowInput)

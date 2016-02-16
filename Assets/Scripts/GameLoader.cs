@@ -56,8 +56,9 @@ public class GameLoader : MonoBehaviour
         }
         Vector3 initCamPos = Transformer.PosToWorld(center);
         initCamPos.z = -5f;
+        initCamPos.y = initCamPos.y + 1f;
         Camera.main.transform.position = initCamPos;
-        Camera.main.orthographicSize = 8f;
+        Camera.main.orthographicSize = Mathf.Abs(Transformer.PosToWorld(center).x - Transformer.PosToWorld(farthest).x) * 2f + 1f;
     }
 
     // Update is called once per frame

@@ -28,15 +28,6 @@ public class Editor : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        int i = 0;
-        Camera.main.orthographicSize = 8f;
-        foreach (GameObject tile in tiles)
-        {
-            // tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 2f * i, -1f);
-            tile.transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0.1f, 0.12f * i + 0.2f, 4f));
-            tile.transform.localScale = new Vector3(Camera.main.orthographicSize / 5f, Camera.main.orthographicSize/5f);
-            i++;
-        }
         if (levelData == null)
         {
             map = new Map();
@@ -90,7 +81,17 @@ public class Editor : MonoBehaviour
         Vector3 initCamPos = new Vector3(0f, 0f);
         if (center != null) initCamPos = Transformer.PosToWorld(center);
         initCamPos.z = -5f;
+        initCamPos.y = initCamPos.y + 1f;
         Camera.main.transform.position = initCamPos;
+        Camera.main.orthographicSize = Mathf.Abs(Transformer.PosToWorld(center).x - Transformer.PosToWorld(farthest).x) * 2.5f;
+        int i = 0;
+        foreach (GameObject tile in tiles)
+        {
+            // tile.transform.position = new Vector3(-Camera.main.orthographicSize * Screen.width / Screen.height + 1f, Camera.main.orthographicSize - 1f - 2f * i, -1f);
+            tile.transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0.1f, 0.12f * i + 0.2f, 4f));
+            tile.transform.localScale = new Vector3(Camera.main.orthographicSize / 5f, Camera.main.orthographicSize/5f);
+            i++;
+        }
     }
 
     // Update is called once per frame
@@ -328,19 +329,19 @@ public class Editor : MonoBehaviour
         Vector3 camPos = Camera.main.transform.position;
         if (Input.GetKey("up"))
         {
-            Camera.main.transform.position = camPos + new Vector3(0f, 0.2f);
+            Camera.main.transform.position = camPos + new Vector3(0f, 6f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
-        else if (Input.GetKey("down"))
+        if (Input.GetKey("down"))
         {
-            Camera.main.transform.position = camPos - new Vector3(0f, 0.2f);
+            Camera.main.transform.position = camPos - new Vector3(0f, 6f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
-        else if (Input.GetKey("left"))
+        if (Input.GetKey("left"))
         {
-            Camera.main.transform.position = camPos - new Vector3(0.2f, 0f);
+            Camera.main.transform.position = camPos - new Vector3(6f, 0f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
-        else if (Input.GetKey("right"))
+        if (Input.GetKey("right"))
         {
-            Camera.main.transform.position = camPos + new Vector3(0.2f, 0f);
+            Camera.main.transform.position = camPos + new Vector3(6f, 0f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && Camera.main.orthographicSize > 2)
