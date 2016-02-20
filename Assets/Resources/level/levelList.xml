@@ -3,22 +3,24 @@
 <tutorial>
   <title>Tutorial1 (1)</title>
   <title>Tutorial2 (1)</title>
+  <title>Map00</title>
   <title>Bone (2)</title>
-  <title>Double (2)</title>
 </tutorial>
 <easy>
-  <title>Butterfly (2)</title>
+  <title>Map06</title>
   <title>Spout (4)</title>
-  <title>Wing (3)</title>
-  <title>Boomerang (3)</title>
+  <title>Butterfly (2)</title>
+  <title>Map05</title>
 </easy>
 <normal>
-  <title>Arrow (3)</title>
+  <title>Map01</title>
+  <title>Boomerang (3)</title>
   <title>Wrench (3)</title>
-  <title>Toothbrush (3)</title>
-  <title>Optical fiber (4)</title>
+  <title>Arrow (3)</title>
 </normal>
 <hard>
-  <title>Example (3)</title>
+  <title>Map03</title>
+  <title>Snail (6)</title>
+  <title>Map04</title>
 </hard>
 </levels>

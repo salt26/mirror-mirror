@@ -35,15 +35,26 @@ public class LevelSelectLoader : MonoBehaviour
             for (int j = 0; j < 4; j++)
             {
                 Transform mapSlot = mapSelectHanlder.transform.GetChild(4 * i + j).GetChild(0);
-                /*
-                Sprite thumbnail = Resources.Load<Sprite>("img/thumbnail/" + tutorials[j].InnerText + ".png");
-                if (thumbnail != null)
+                if (tutorials[j] != null)
                 {
-                    mapSlot.GetChild(0).GetComponent<Image>().sprite = thumbnail;
+                    Sprite thumbnail = Resources.Load<Sprite>("img/thumbnail/" + tutorials[j].InnerText);
+                    if (thumbnail != null)
+                    {
+                        mapSlot.GetChild(0).GetComponent<Image>().sprite = thumbnail;
+                    }
+                    else
+                    {
+                        mapSlot.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/closeX");
+                    }
+                    mapSlot.GetChild(1).GetComponent<Text>().text = tutorials[j].InnerText;
+                    mapSlot.name = tutorials[j].InnerText;
                 }
-                */
-                mapSlot.GetChild(1).GetComponent<Text>().text = tutorials[j].InnerText;
-                mapSlot.name = tutorials[j].InnerText;
+                else
+                {
+                    mapSlot.GetChild(1).GetComponent<Text>().text = "";
+                    mapSlot.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/lock");
+                    mapSlot.name = "";
+                }
                 UIButtonHandler.levelList[4 * i + j] = mapSlot.name;
             }
         }

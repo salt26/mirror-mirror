@@ -54,11 +54,19 @@ public class GameLoader : MonoBehaviour
                 farthest = localFarthest;
             }
         }
+        float maxWidth = 0f;
+        foreach(Pos p in tileList)
+        {
+            if (Mathf.Abs(Transformer.PosToWorld(center).x - Transformer.PosToWorld(p).x) > maxWidth)
+            {
+                maxWidth = Mathf.Abs(Transformer.PosToWorld(center).x - Transformer.PosToWorld(p).x);
+            }
+        }
         Vector3 initCamPos = Transformer.PosToWorld(center);
         initCamPos.z = -5f;
         initCamPos.y = initCamPos.y + 1f;
         Camera.main.transform.position = initCamPos;
-        Camera.main.orthographicSize = Mathf.Abs(Transformer.PosToWorld(center).x - Transformer.PosToWorld(farthest).x) * 2f + 1f;
+        Camera.main.orthographicSize = maxWidth * 2f + 1f;
     }
 
     // Update is called once per frame
