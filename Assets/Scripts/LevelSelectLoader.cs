@@ -46,8 +46,16 @@ public class LevelSelectLoader : MonoBehaviour
                     {
                         mapSlot.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/closeX");
                     }
-                    mapSlot.GetChild(1).GetComponent<Text>().text = tutorials[j].InnerText;
                     mapSlot.name = tutorials[j].InnerText;
+
+                    if ( PlayerPrefs.GetInt(tutorials[j].InnerText) == 1)
+                    {
+                        mapSlot.GetChild(1).GetComponent<Text>().text = "CLEAR";
+                    }
+                    else
+                    {
+                        mapSlot.GetChild(1).GetComponent<Text>().text = "";
+                    }
                 }
                 else
                 {

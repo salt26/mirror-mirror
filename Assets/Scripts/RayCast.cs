@@ -95,6 +95,8 @@ public class RayCast : MonoBehaviour
                 Debug.Log("Level Clear");
                 ClearUI.SetActive(true);
                 isClear = true;
+                PlayerPrefs.SetInt(GameLoader.levelData, 1);
+                PlayerPrefs.Save();
                 break;
             }
             if (map.tileset.TryGetValue(nextPos, out next))
