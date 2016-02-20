@@ -93,10 +93,10 @@ public class RayCast : MonoBehaviour
             {
                 // Clear
                 Debug.Log("Level Clear");
-                ClearUI.SetActive(true);
                 isClear = true;
                 PlayerPrefs.SetInt(GameLoader.levelData, 1);
                 PlayerPrefs.Save();
+                FindObjectOfType<UIButtonHandler>().onMenuOpen();
                 break;
             }
             if (map.tileset.TryGetValue(nextPos, out next))
