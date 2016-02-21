@@ -1,108 +1,109 @@
 <map>
+  <flip>3</flip>
   <start>
-    <pos_x>-1</pos_x>
+    <pos_x>0</pos_x>
     <pos_y>-1</pos_y>
     <dir>North</dir>
   </start>
   <tile>
-    <type>HalfEdge</type>
+    <type>Empty</type>
+    <pos_x>0</pos_x>
+    <pos_y>0</pos_y>
+    <dir>North</dir>
+  </tile>
+  <end>
     <pos_x>-1</pos_x>
+    <pos_y>-1</pos_y>
+    <dir>SWW</dir>
+  </end>
+  <tile>
+    <type>FullCorner</type>
+    <pos_x>1</pos_x>
+    <pos_y>0</pos_y>
+    <dir>EES</dir>
+  </tile>
+  <tile>
+    <type>HalfEdge</type>
+    <pos_x>0</pos_x>
     <pos_y>1</pos_y>
     <dir>SSW</dir>
   </tile>
   <tile>
     <type>FullCorner</type>
-    <pos_x>-1</pos_x>
-    <pos_y>2</pos_y>
-    <dir>NEE</dir>
-  </tile>
-  <tile>
-    <type>Empty</type>
     <pos_x>0</pos_x>
     <pos_y>2</pos_y>
-    <dir>North</dir>
+    <dir>EES</dir>
   </tile>
   <tile>
-    <type>Empty</type>
-    <pos_x>-1</pos_x>
-    <pos_y>3</pos_y>
-    <dir>North</dir>
-  </tile>
-  <tile>
-    <type>Empty</type>
-    <pos_x>-1</pos_x>
-    <pos_y>0</pos_y>
-    <dir>North</dir>
+    <type>FullCorner</type>
+    <pos_x>1</pos_x>
+    <pos_y>1</pos_y>
+    <dir>South</dir>
   </tile>
   <tile>
     <type>HalfEdge</type>
-    <pos_x>0</pos_x>
-    <pos_y>1</pos_y>
-    <dir>West</dir>
+    <pos_x>2</pos_x>
+    <pos_y>2</pos_y>
+    <dir>WNN</dir>
   </tile>
   <tile>
     <type>FullCorner</type>
-    <pos_x>0</pos_x>
-    <pos_y>3</pos_y>
-    <dir>North</dir>
-  </tile>
-  <tile>
-    <type>Empty</type>
     <pos_x>1</pos_x>
     <pos_y>2</pos_y>
-    <dir>North</dir>
-  </tile>
-  <tile>
-    <type>FullCorner</type>
-    <pos_x>1</pos_x>
-    <pos_y>3</pos_y>
     <dir>NEE</dir>
   </tile>
   <tile>
     <type>FullCorner</type>
     <pos_x>2</pos_x>
     <pos_y>3</pos_y>
-    <dir>EES</dir>
-  </tile>
-  <tile>
-    <type>FullEdge</type>
-    <pos_x>3</pos_x>
-    <pos_y>3</pos_y>
-    <dir>East</dir>
-  </tile>
-  <tile>
-    <type>FullEdge</type>
-    <pos_x>3</pos_x>
-    <pos_y>2</pos_y>
-    <dir>East</dir>
-  </tile>
-  <tile>
-    <type>FullCorner</type>
-    <pos_x>-2</pos_x>
-    <pos_y>3</pos_y>
-    <dir>EES</dir>
-  </tile>
-  <tile>
-    <type>Empty</type>
-    <pos_x>-2</pos_x>
-    <pos_y>4</pos_y>
     <dir>North</dir>
   </tile>
   <tile>
-    <type>FullEdge</type>
-    <pos_x>-2</pos_x>
-    <pos_y>5</pos_y>
-    <dir>ESS</dir>
+    <type>Empty</type>
+    <pos_x>3</pos_x>
+    <pos_y>2</pos_y>
+    <dir>WWN</dir>
   </tile>
   <tile>
     <type>FullEdge</type>
-    <pos_x>-3</pos_x>
-    <pos_y>4</pos_y>
+    <pos_x>4</pos_x>
+    <pos_y>3</pos_y>
     <dir>East</dir>
   </tile>
-  <end>
+  <tile>
+    <type>FullEdge</type>
+    <pos_x>4</pos_x>
+    <pos_y>2</pos_y>
+    <dir>WNN</dir>
+  </tile>
+  <tile>
+    <type>HalfEdge</type>
+    <pos_x>0</pos_x>
+    <pos_y>3</pos_y>
+    <dir>WNN</dir>
+  </tile>
+  <tile>
+    <type>FullCorner</type>
+    <pos_x>-1</pos_x>
+    <pos_y>2</pos_y>
+    <dir>NEE</dir>
+  </tile>
+  <tile>
+    <type>Empty</type>
+    <pos_x>-1</pos_x>
+    <pos_y>3</pos_y>
+    <dir>NEE</dir>
+  </tile>
+  <tile>
+    <type>FullEdge</type>
     <pos_x>-2</pos_x>
-    <pos_y>0</pos_y>
-    <dir>SWW</dir>
-  </end>
+    <pos_y>4</pos_y>
+    <dir>WNN</dir>
+  </tile>
+  <tile>
+    <type>FullEdge</type>
+    <pos_x>-1</pos_x>
+    <pos_y>4</pos_y>
+    <dir>NNE</dir>
+  </tile>
 </map>
