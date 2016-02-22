@@ -8,6 +8,8 @@ public class HowtoInputHandler : MonoBehaviour
     int pos = 0;
     public int maxPage;
     public Text pageStatus;
+    public Text title;
+    string[] titleList = { "Intro", "Goal", "Flip", "Mirror", "Half Mirror", "Camera" };
 
     void Start()
     {
@@ -28,6 +30,8 @@ public class HowtoInputHandler : MonoBehaviour
         {
             pageStatus.text = (pos + 1) + " / " + maxPage;
         }
+
+        title.text = titleList[pos];
 
         if (Input.GetMouseButtonDown(0))
         {
