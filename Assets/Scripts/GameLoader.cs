@@ -22,11 +22,11 @@ public class GameLoader : MonoBehaviour
         }
         // rayCast.ray.SetVertexCount(1);
         // rayCast.MakeRayLine();
+        RayCast.isClear = false;
         rayCast.MakeLaserSprite();
 
         double minLength = double.PositiveInfinity;
         Pos center = new Pos(0, 0);
-        Pos farthest = new Pos(0, 0);
         ArrayList tileList = new ArrayList();
         foreach(Pos p in map.tileset.Keys)
         {
@@ -37,21 +37,18 @@ public class GameLoader : MonoBehaviour
         foreach(Pos p in tileList)
         {
             double maxLength = 0f;
-            Pos localFarthest = new Pos(0, 0);
             foreach(Pos other_p in tileList)
             {
                 if (p.Equals(other_p)) continue;
                 if (Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p)) > maxLength)
                 {
                     maxLength = Vector3.Distance(Transformer.PosToWorld(p), Transformer.PosToWorld(other_p));
-                    localFarthest = other_p;
                 }
             }
             if (maxLength < minLength)
             {
                 minLength = maxLength;
                 center = p;
-                farthest = localFarthest;
             }
         }
         float maxWidth = 0f;

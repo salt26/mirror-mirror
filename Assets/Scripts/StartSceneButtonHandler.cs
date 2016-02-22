@@ -5,14 +5,12 @@ using UnityEngine.SceneManagement;
 public class StartSceneButtonHandler : MonoBehaviour
 {
     public GameObject[] tiles;
-    Direction[] dirs;
     public float flipTime = 0.5f; // Flip animation에 걸리는 시간
 
     bool isFlipping = false;
 
     void Start()
     {
-        dirs = new Direction[4] { Direction.North, Direction.North, Direction.NNE, Direction.NNE };
     }
 
     void Update()
@@ -39,6 +37,7 @@ public class StartSceneButtonHandler : MonoBehaviour
 
     public void onHowtoClick()
     {
+        SceneManager.LoadScene("howtoplay");
     }
 
     IEnumerator Flip(GameObject tile, Direction dir)
