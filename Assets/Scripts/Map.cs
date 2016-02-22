@@ -15,10 +15,9 @@ public class Map
 
     public Map(string Filename)
     {
-        StreamReader sr = new StreamReader(Application.dataPath + "/Resources/level/" + Filename + ".xml");
-        String textAsset = sr.ReadToEnd();
+        TextAsset textAsset = Resources.Load<TextAsset>("level/" + Filename);
         XmlDocument xmldoc = new XmlDocument();
-        xmldoc.LoadXml(textAsset);
+        xmldoc.LoadXml(textAsset.text);
 
         XmlNodeList tiles = xmldoc.SelectNodes("map/tile");
         foreach (XmlNode tile in tiles)

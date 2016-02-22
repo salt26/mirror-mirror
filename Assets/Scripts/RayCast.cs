@@ -208,6 +208,7 @@ public class RayCast : MonoBehaviour
         Destroy(clearHilight.t.gameObject);
         yield return new WaitForSeconds(0.7f);
         playingClearAnimation = false;
+        UIButtonHandler.clearAnimation = true;
         FindObjectOfType<UIButtonHandler>().onMenuOpen();
         FindObjectOfType<UIButtonHandler>().menuUI.SetActive(false);
     }
