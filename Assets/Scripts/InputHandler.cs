@@ -17,6 +17,8 @@ public class InputHandler : MonoBehaviour
     Vector3 clickPos;
     Vector3 camPosBoth;
     int flip;
+    AudioSource flipSound;
+    public AudioClip flipSoundClip;
 
     void Start()
     {
@@ -24,6 +26,7 @@ public class InputHandler : MonoBehaviour
         allowInput = true;
         flip = 0;
         flipStatus.text = flip + " / " + FindObjectOfType<GameLoader>().map.maxFlip.ToString();
+        flipSound = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -72,6 +75,7 @@ public class InputHandler : MonoBehaviour
 
                 if (selectedTiles.Count > 1 && (flip < FindObjectOfType<GameLoader>().map.maxFlip || isSame) )
                 {
+                    flipSound.PlayOneShot(flipSoundClip);
                     foreach (Hexagon tile in selectedTiles)
                     {
                         StartCoroutine(Flip(tile, dir));
@@ -216,6 +220,7 @@ public class InputHandler : MonoBehaviour
             KeyValuePair<ArrayList, Direction> pop = gameStack.Pop();
             ArrayList tiles = pop.Key;
             Direction dir = pop.Value;
+            flipSound.PlayOneShot(flipSoundClip);
             foreach (Hexagon tile in tiles)
             {
                 StartCoroutine(Flip(tile, Hexagon.DegreeToDirection(Hexagon.DirectionToDegree(dir) + 180)));

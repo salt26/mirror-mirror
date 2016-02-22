@@ -21,7 +21,21 @@ public class UIButtonHandler : MonoBehaviour
         int i = 0;
         while (GameLoader.levelData != levelList[i++]) ;
         GameLoader.levelData = levelList[i];
-        SceneManager.LoadScene("gameplay");
+        if (GameLoader.levelData == "1-1")
+        {
+            SceneManager.LoadScene("tutorial1");
+        }
+        else if (GameLoader.levelData == "1-2")
+        {
+            SceneManager.LoadScene("tutorial2");
+        }
+        else if (GameLoader.levelData == "1-3")
+        {
+            SceneManager.LoadScene("tutorial3");
+        }
+        else {
+            SceneManager.LoadScene("gameplay");
+        }
     }
 
     public void onViewMapClick()

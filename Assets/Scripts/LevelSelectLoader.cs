@@ -70,6 +70,20 @@ public class LevelSelectLoader : MonoBehaviour
     public void onPlayClick()
     {
         GameLoader.levelData = targetMap.transform.name;
-        SceneManager.LoadScene("gameplay");
+        if (GameLoader.levelData == "1-1")
+        {
+            SceneManager.LoadScene("tutorial1");
+        }
+        else if (GameLoader.levelData == "1-2")
+        {
+            SceneManager.LoadScene("tutorial2");
+        }
+        else if (GameLoader.levelData == "1-3")
+        {
+            SceneManager.LoadScene("tutorial3");
+        }
+        else {
+            SceneManager.LoadScene("gameplay");
+        }
     }
 }
