@@ -44,11 +44,11 @@ public class InputHandler : MonoBehaviour
         {
             if (status == MouseStatus.Both)
             {
-                Camera.main.transform.position = camPosBoth - (Camera.main.ScreenToViewportPoint(Input.mousePosition) - clickPos) * Camera.main.orthographicSize * 2f;
+                Camera.main.transform.position = camPosBoth - Vector3.Scale((Camera.main.ScreenToViewportPoint(Input.mousePosition) - clickPos), new Vector3(0.6f, 1f)) * Camera.main.orthographicSize * 2f;
                 if(Input.touchCount > 1)
                 {
                     float distance = Vector2.Distance(Input.touches[0].position, Input.touches[1].position);
-                    if (touchDistance / distance > 1.2f || distance / touchDistance > 1.2f)
+                    if (Mathf.Abs(touchDistance - distance) > 100f)
                     {
                         touchDistance = distance;
                         camSize = Camera.main.orthographicSize;
