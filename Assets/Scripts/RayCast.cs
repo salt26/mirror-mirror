@@ -212,8 +212,40 @@ public class RayCast : MonoBehaviour
         Destroy(clearHilight.t.gameObject);
         if (UIButtonHandler.clearAnimation == true)
         {
+            Transform t = (Transform)MonoBehaviour.Instantiate(
+                    hilightPrefab,
+                    Transformer.PosToWorld(Hexagon.NextTile(laserList[laserList.Count-1].p, laserList[laserList.Count - 1].dir)) + (Vector3.back * 0.3f),
+                    Quaternion.AngleAxis(Hexagon.DirectionToDegree(laserList[laserList.Count - 1].dir) + 90, Vector3.back));
+            t.localScale = new Vector3(0.4f, 1.30f, 1.0f);
+            Material m = t.GetComponent<MeshRenderer>().material;
+            /*
+            for (float i = 0.1f; i < 0.7f; i += Time.deltaTime)
+            {
+                m.mainTextureScale = new Vector2(1, 0.1f / i / i);
+                m.mainTextureOffset = new Vector2(0, 0.5f - 0.1f / i / i / 2);
+                yield return null;
+            }
+            for(float i = 0.7f; i > 0.1; i -= Time.deltaTime)
+            {
+                m.mainTextureScale = new Vector2(1, 0.1f / i / i);
+                m.mainTextureOffset = new Vector2(0, 0.5f - 0.1f / i / i / 2);
+                yield return null;
+            }
+            */
+            m.mainTextureScale = new Vector2(1f, 3f);
+            float i = 0.0f;
+            for (; i < 0.3f; i += Time.deltaTime)
+            {
+                m.mainTextureOffset = new Vector2(0, -7 * i + 3f);
+                yield return null;
+            }
             clearSound.PlayOneShot(clearSoundClip);
-            yield return new WaitForSeconds(0.7f);
+            for (; i < 1f; i += Time.deltaTime)
+            {
+                m.mainTextureOffset = new Vector2(0, -7 * i + 3f);
+                yield return null;
+            }
+            Destroy(t.gameObject);
         }
         playingClearAnimation = false;
         FindObjectOfType<UIButtonHandler>().onMenuOpen();
@@ -263,7 +295,7 @@ class LaserElement
         set
         {
             t.position = (Transformer.PosToWorld(p) * (2 - value) + Transformer.PosToWorld(Hexagon.NextTile(p, dir)) * value) / 2 + (Vector3.back * 0.1f);
-            t.localScale = t.localScale = new Vector3(t.localScale.x, t.localScale.y * value / _length);
+            t.localScale = new Vector3(t.localScale.x, t.localScale.y * value / _length);
             _length = value;
         }
     }
