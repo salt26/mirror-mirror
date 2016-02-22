@@ -19,6 +19,8 @@ public class RayCast : MonoBehaviour
     float hilightSpeed = 4f;
     public static bool isClear;
     public static bool playingClearAnimation;
+    AudioSource clearSound;
+    public AudioClip clearSoundClip;
 
     // Use this for initialization
     void Start()
@@ -26,6 +28,7 @@ public class RayCast : MonoBehaviour
         isClear = false;
         playingClearAnimation = false;
         RemoveRay();
+        clearSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -209,6 +212,7 @@ public class RayCast : MonoBehaviour
         Destroy(clearHilight.t.gameObject);
         if (UIButtonHandler.clearAnimation == true)
         {
+            clearSound.PlayOneShot(clearSoundClip);
             yield return new WaitForSeconds(0.7f);
         }
         playingClearAnimation = false;
