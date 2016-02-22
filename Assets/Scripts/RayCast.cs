@@ -166,6 +166,7 @@ public class RayCast : MonoBehaviour
 
     IEnumerator StageClear()
     {
+        LaserElement clearHilight = new LaserElement(hilightPrefab, laserList[0].p, laserList[0].dir, 1.0f); ;
         PlayerPrefs.SetInt(GameLoader.levelData, 1);
         PlayerPrefs.Save();
         playingClearAnimation = true;
@@ -175,6 +176,7 @@ public class RayCast : MonoBehaviour
         }
         for (float clearLaserPos = 0; clearLaserPos < laserLength; clearLaserPos += Time.deltaTime * 6.0f)
         {
+            if (!UIButtonHandler.clearAnimation) break;
             float drawedLaserPos = 0;
             for (int i = 0; i < laserList.Count; i++)
             {
@@ -186,6 +188,11 @@ public class RayCast : MonoBehaviour
                     if (clearLaserPos - drawedLaserPos <= 1.0f)
                     {
                         laserList[i].length = clearLaserPos - drawedLaserPos;
+                        clearHilight.SetPosition(laserList[i].p, laserList[i].dir, laserList[i].length);
+                        MeshRenderer render = clearHilight.t.GetComponent<MeshRenderer>();
+                        render.material.mainTextureScale = new Vector2(1.0f, hilightWidth * clearHilight.length);
+                        render.material.mainTextureOffset = new Vector2(0.0f, -hilightWidth * clearHilight.length + 0.8f);
+                        render.sortingOrder = laserList.Count;
                     }
                     else if (laserList[i].length < 1.0f)
                         laserList[i].length = 1.0f;
@@ -199,9 +206,12 @@ public class RayCast : MonoBehaviour
             laserList[i].t.gameObject.SetActive(true);
             laserList[i].length = 1.0f;
         }
-        yield return new WaitForSeconds(0.7f);
+        Destroy(clearHilight.t.gameObject);
+        if (UIButtonHandler.clearAnimation == true)
+        {
+            yield return new WaitForSeconds(0.7f);
+        }
         playingClearAnimation = false;
-        UIButtonHandler.clearAnimation = true;
         FindObjectOfType<UIButtonHandler>().onMenuOpen();
         FindObjectOfType<UIButtonHandler>().menuUI.SetActive(false);
     }
@@ -222,13 +232,22 @@ class LaserElement
 {
     public LaserElement(Transform prefab, Pos p, Direction dir, float length)
     {
-        _length = length;
+        _length = 1.0f;
         this.dir = dir;
         this.p = p;
         this.t = (Transform)MonoBehaviour.Instantiate(
                     prefab,
                     (Transformer.PosToWorld(p) * (2 - length) + Transformer.PosToWorld(Hexagon.NextTile(p, dir)) * length) / 2 + (Vector3.back * 0.1f),
                     Quaternion.AngleAxis(Hexagon.DirectionToDegree(dir), Vector3.back));
+        this.length = length;
+    }
+
+    public void SetPosition(Pos p, Direction dir, float length)
+    {
+        this.dir = dir;
+        this.p = p;
+        this.length = length;
+        this.t.rotation = Quaternion.AngleAxis(Hexagon.DirectionToDegree(dir), Vector3.back);
     }
     public Transform t;
     public Pos p; // 시작 위치
