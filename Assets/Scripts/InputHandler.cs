@@ -16,6 +16,8 @@ public class InputHandler : MonoBehaviour
     public bool allowInput = true;
     Vector3 clickPos;
     Vector3 camPosBoth;
+    float touchDistance;
+    float camSize;
     int flip;
     AudioSource flipSound;
     public AudioClip flipSoundClip;
@@ -31,24 +33,80 @@ public class InputHandler : MonoBehaviour
 
     void Update()
     {
-        Vector3 mousePos = Input.mousePosition;
-        if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+        if (!rayCast.activeRay && allowInput)
         {
-            if (status != MouseStatus.Both)
+            rayCast.MakeLaserSprite();
+        }
+        else if (rayCast.activeRay && !allowInput)
+        {
+            rayCast.RemoveRay();
+        }
+
+        Vector3 mousePos = Input.mousePosition;
+        if (Input.GetMouseButton(0) && Input.GetMouseButton(1) || Input.touchCount > 1)
+        {
+            if (status == MouseStatus.Both)
             {
-                clickPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-                camPosBoth = Camera.main.transform.position;
-                status = MouseStatus.Both;
+                Camera.main.transform.position = camPosBoth - Vector3.Scale((Camera.main.ScreenToViewportPoint(Input.mousePosition) - clickPos), new Vector3(0.6f, 1f)) * Camera.main.orthographicSize * 2f;
+                if(Input.touchCount > 1)
+                {
+                    float distance = Vector2.Distance(Input.touches[0].position, Input.touches[1].position);
+                    if (Mathf.Abs(touchDistance - distance) > 100f)
+                    {
+                        touchDistance = distance;
+                        camSize = Camera.main.orthographicSize;
+                        status = MouseStatus.Zoom;
+                    }
+                }
+            }
+            else if (status == MouseStatus.Zoom)
+            {
+                float distance = Vector2.Distance(Input.touches[0].position, Input.touches[1].position);
+                Camera.main.orthographicSize = camSize * touchDistance / distance;
+                if(Camera.main.orthographicSize < 2)
+                {
+                    Camera.main.orthographicSize = camSize = 2;
+                    touchDistance = distance;
+                }
             }
             else
             {
-                Camera.main.transform.position = camPosBoth - (Camera.main.ScreenToViewportPoint(Input.mousePosition) - clickPos) * Camera.main.orthographicSize * 2f;
+                if (status == MouseStatus.Clicked)
+                {
+                    selectedTiles.Clear();
+                    foreach (Hexagon tile in MonoBehaviour.FindObjectOfType<GameLoader>().map.tileset.Values)
+                    {
+                        // tile.obj.GetComponent<SpriteRenderer>().color = Color.white;
+                        tile.obj.GetComponentInChildren<TileHilighter>().Dehilight();
+                    }
+                }
+                clickPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                camPosBoth = Camera.main.transform.position;
+                if(Input.touchCount > 1)
+                    touchDistance = Vector2.Distance(Input.touches[0].position, Input.touches[1].position);
+                else
+                    touchDistance = 100.0f;
+                status = MouseStatus.Both;
             }
             return;
         }
         else
         {
-            if(status == MouseStatus.Both) status = MouseStatus.Neutral;
+            if (status == MouseStatus.Both || status == MouseStatus.Zoom)
+            {
+                clickPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                camPosBoth = Camera.main.transform.position;
+                status = MouseStatus.Drag;
+            }
+        }
+
+        if (status == MouseStatus.Drag)
+        {
+            if(Input.touchCount == 0 && !Input.GetMouseButton(0) && !Input.GetMouseButton(1))
+                status = MouseStatus.Neutral;
+            else
+                Camera.main.transform.position = camPosBoth - (Camera.main.ScreenToViewportPoint(Input.mousePosition) - clickPos) * Camera.main.orthographicSize * 2f;
+            return;
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -101,7 +159,7 @@ public class InputHandler : MonoBehaviour
             }
             status = MouseStatus.Neutral;
         }
-        else if (Input.GetMouseButtonDown(0) && allowInput)
+        else if (Input.GetMouseButtonDown(0) && allowInput && status == MouseStatus.Neutral)
         {
             if (RayCast.isClear) return;
             Pos p = Transformer.WorldToPos(mousePos);
@@ -200,16 +258,6 @@ public class InputHandler : MonoBehaviour
         {
             Camera.main.transform.position = camPos + new Vector3(6f, 0f) * Camera.main.orthographicSize / 8f * Time.deltaTime;
         }
-
-        if (!rayCast.activeRay && allowInput)
-        {
-            //rayCast.MakeRayLine();
-            rayCast.MakeLaserSprite();
-        }
-        else if (rayCast.activeRay && !allowInput)
-        {
-            rayCast.RemoveRay();
-        }
     }
 
     public void onUndoClick()
@@ -263,4 +311,4 @@ public class InputHandler : MonoBehaviour
 
 }
 
-public enum MouseStatus { Neutral, Clicked, Both }
+public enum MouseStatus { Neutral, Clicked, Both, Zoom, Drag }

@@ -24,6 +24,7 @@ public class GameLoader : MonoBehaviour
         // rayCast.MakeRayLine();
         RayCast.isClear = false;
         rayCast.MakeLaserSprite();
+        UIButtonHandler.clearAnimation = true;
 
         double minLength = double.PositiveInfinity;
         Pos center = new Pos(0, 0);
