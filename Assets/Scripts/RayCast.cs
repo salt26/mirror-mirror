@@ -176,6 +176,7 @@ public class RayCast : MonoBehaviour
         }
         for (float clearLaserPos = 0; clearLaserPos < laserLength; clearLaserPos += Time.deltaTime * 6.0f)
         {
+            if (!UIButtonHandler.clearAnimation) break;
             float drawedLaserPos = 0;
             for (int i = 0; i < laserList.Count; i++)
             {
@@ -206,9 +207,11 @@ public class RayCast : MonoBehaviour
             laserList[i].length = 1.0f;
         }
         Destroy(clearHilight.t.gameObject);
-        yield return new WaitForSeconds(0.7f);
+        if (UIButtonHandler.clearAnimation == true)
+        {
+            yield return new WaitForSeconds(0.7f);
+        }
         playingClearAnimation = false;
-        UIButtonHandler.clearAnimation = true;
         FindObjectOfType<UIButtonHandler>().onMenuOpen();
         FindObjectOfType<UIButtonHandler>().menuUI.SetActive(false);
     }

@@ -33,7 +33,7 @@ public class UIButtonHandler : MonoBehaviour
     {
         if (RayCast.isClear)
         {
-            if (!clearUI.activeSelf)
+            if (!clearUI.activeSelf && !RayCast.playingClearAnimation)
             {
                 clearUI.SetActive(true);
                 StartCoroutine(clearUIPopup());
@@ -65,7 +65,7 @@ public class UIButtonHandler : MonoBehaviour
 
         for (f = 0f; f < 1f; f += Time.deltaTime)
         {
-            if (!clearAnimation) f = 1f;
+            if (!clearAnimation) break;
             yield return null;
         }
 
@@ -86,6 +86,7 @@ public class UIButtonHandler : MonoBehaviour
             {
                 clearButtons[2].SetActive(true);
             }
+            if (!clearAnimation) break;
             yield return null;
         }
         clearButtons[3].SetActive(true);
