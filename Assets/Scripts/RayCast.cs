@@ -9,7 +9,7 @@ public class RayCast : MonoBehaviour
     public Transform laserPrefab;
     public bool activeRay = true;
     Map map;
-    List<Transform> laserList = new List<Transform>();
+    List<LaserElement> laserList = new List<LaserElement>();
     public static bool isClear;
 
     // Use this for initialization
@@ -71,10 +71,11 @@ public class RayCast : MonoBehaviour
     {
         map = MonoBehaviour.FindObjectOfType<GameLoader>().map;
         ArrayList visited = new ArrayList();
-        laserList.ForEach(i => Destroy(i.gameObject));
+        laserList.ForEach(i => Destroy(i.t.gameObject));
         laserList.Clear();
 
         Pos p, nextPos;
+        float laserLength = 0;
         p = map.start.Key;
         Direction dir = map.start.Value.dir;
 
@@ -83,12 +84,9 @@ public class RayCast : MonoBehaviour
             Hexagon next;
             nextPos = Hexagon.NextTile(p, dir);
             Debug.DrawLine(Transformer.PosToWorld(p), Transformer.PosToWorld(nextPos), Color.red);
-            Transform newLaser = (Transform) Instantiate(
-                laserPrefab, 
-                (Transformer.PosToWorld(p) + Transformer.PosToWorld(nextPos)) / 2 + (Vector3.back * 0.2f) + (new Vector3(0f, 0f, 0.1f)), 
-                Quaternion.AngleAxis(Hexagon.DirectionToDegree(dir), Vector3.back));
+            LaserElement newLaser = new LaserElement(laserPrefab, p, dir, 1.0f);
             laserList.Add(newLaser);
-            newLaser.parent = ray.transform;
+            newLaser.t.parent = ray.transform;
             if (nextPos.Equals(map.end.Key) && dir == map.end.Value.dir)
             {
                 // Clear
@@ -103,8 +101,7 @@ public class RayCast : MonoBehaviour
             {
                 if (next.Reflect(dir) == Direction.Empty)
                 {
-                    newLaser.position = (Transformer.PosToWorld(p) * 3 + Transformer.PosToWorld(nextPos)) / 4 + (Vector3.back * 0.2f) + (new Vector3(0f, 0f, 0.1f));
-                    newLaser.localScale = new Vector3(newLaser.localScale.x, newLaser.localScale.y *0.5f);
+                    newLaser.length = 0.5f;
                     break;
                 }
                 dir = next.Reflect(dir);
@@ -114,15 +111,17 @@ public class RayCast : MonoBehaviour
             }
             else
             {
-                newLaser.position = (Transformer.PosToWorld(p) * 3 + Transformer.PosToWorld(nextPos)) / 4 + (Vector3.back * 0.2f) + (new Vector3(0f, 0f, 0.1f));
-                newLaser.localScale = new Vector3(newLaser.localScale.x, newLaser.localScale.y *0.5f);
+                newLaser.length = 0.5f;
                 break;
             }
         }
+        laserLength = 0;
+        laserList.ForEach(i => laserLength += i.length);
         for (int i = 0; i < laserList.Count; i++)
         {
-            SpriteRenderer render = laserList[i].GetComponent<SpriteRenderer>();
-            render.color = new Color(1, 1.0f * i / Mathf.Max(20, laserList.Count), 0);
+            MeshRenderer render = laserList[i].t.GetComponent<MeshRenderer>();
+            render.material.mainTextureScale = new Vector2(1.0f, 1/Mathf.Max(16.0f, laserLength));
+            render.material.mainTextureOffset = new Vector2(0.0f, i/Mathf.Max(16.0f, laserLength));
             render.sortingOrder = i;
         }
         activeRay = true;
@@ -132,9 +131,39 @@ public class RayCast : MonoBehaviour
     {
         ray.SetVertexCount(1);
         ray.SetPosition(0, Vector3.zero);
-        laserList.ForEach(i => Destroy(i.gameObject));
+        laserList.ForEach(i => Destroy(i.t.gameObject));
         laserList.Clear();
         activeRay = false;
         ray.enabled = false;
     }
 }
+
+class LaserElement
+{
+    public LaserElement(Transform prefab, Pos p, Direction dir, float length)
+    {
+        _length = length;
+        this.dir = dir;
+        this.p = p;
+        this.t = (Transform)MonoBehaviour.Instantiate(
+                    prefab,
+                    (Transformer.PosToWorld(p) * (2 - length) + Transformer.PosToWorld(Hexagon.NextTile(p, dir)) * length) / 2 + (Vector3.back * 0.1f),
+                    Quaternion.AngleAxis(Hexagon.DirectionToDegree(dir), Vector3.back));
+    }
+    public Transform t;
+    public Pos p; // 시작 위치
+    public Direction dir;
+    float _length;
+    public float length
+    {
+        get { return _length; }
+        set
+        {
+            t.position = (Transformer.PosToWorld(p) * (2 - value) + Transformer.PosToWorld(Hexagon.NextTile(p, dir)) * value) / 2 + (Vector3.back * 0.1f);
+            t.localScale = t.localScale = new Vector3(t.localScale.x, t.localScale.y * value / _length);
+            _length = value;
+        }
+    }
+}
+
+
