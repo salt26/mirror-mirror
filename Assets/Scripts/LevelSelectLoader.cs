@@ -22,51 +22,21 @@ public class LevelSelectLoader : MonoBehaviour
 
     void loadLevel()
     {
-        StreamReader sr = new StreamReader(Application.dataPath + "/Resources/level/levelList.xml");
-        String textAsset = sr.ReadToEnd();
-        XmlDocument xmldoc = new XmlDocument();
-        xmldoc.LoadXml(textAsset);
-
-        string[] names = { "tutorial", "easy", "normal", "hard" };
         UIButtonHandler.levelList = new string[16];
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 15; i++)
         {
-            XmlNodeList tutorials = xmldoc.SelectSingleNode("levels/" + names[i]).SelectNodes("title");
-            for (int j = 0; j < 4; j++)
+            Transform mapSlot = mapSelectHanlder.transform.GetChild(i).GetChild(0);
+            if (PlayerPrefs.GetInt((i / 4 + 1).ToString() + "-" + (i % 4 + 1).ToString()) == 1)
             {
-                Transform mapSlot = mapSelectHanlder.transform.GetChild(4 * i + j).GetChild(0);
-                if (tutorials[j] != null)
-                {
-                    mapSlot.GetChild(0).GetComponent<Text>().text = (4 * i + j + 1).ToString();
-                    Sprite thumbnail = Resources.Load<Sprite>("img/thumbnail/" + tutorials[j].InnerText);
-                    if (thumbnail != null)
-                    {
-                        mapSlot.GetChild(1).GetComponent<Image>().sprite = thumbnail;
-                    }
-                    else
-                    {
-                        mapSlot.GetChild(1).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/closeX");
-                    }
-                    mapSlot.name = tutorials[j].InnerText;
-
-                    if ( PlayerPrefs.GetInt(tutorials[j].InnerText) == 1)
-                    {
-                        mapSlot.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/BlueStar");
-                    }
-                    else
-                    {
-                        mapSlot.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/DottedBlueStar");
-                    }
-                }
-                else
-                {
-                    mapSlot.GetChild(0).GetComponent<Text>().text = "";
-                    mapSlot.GetChild(1).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/lock");
-                    mapSlot.name = "";
-                }
-                UIButtonHandler.levelList[4 * i + j] = mapSlot.name;
+                mapSlot.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/BlueStar");
             }
+            else
+            {
+                mapSlot.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/DottedBlueStar");
+            }
+            UIButtonHandler.levelList[i] = (i / 4 + 1).ToString() + "-" + (i % 4 + 1).ToString();
         }
+        UIButtonHandler.levelList[15] = "";
     }
 
     // Update is called once per frame

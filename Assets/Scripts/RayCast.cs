@@ -201,6 +201,7 @@ public class RayCast : MonoBehaviour
         }
         yield return new WaitForSeconds(0.7f);
         playingClearAnimation = false;
+        UIButtonHandler.clearAnimation = true;
         FindObjectOfType<UIButtonHandler>().onMenuOpen();
         FindObjectOfType<UIButtonHandler>().menuUI.SetActive(false);
     }
