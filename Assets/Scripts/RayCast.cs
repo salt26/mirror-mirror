@@ -7,21 +7,52 @@ public class RayCast : MonoBehaviour
     public GameObject ClearUI; // RayCast에서 들고 있게 했지만 옮길 수 있음
     public LineRenderer ray;
     public Transform laserPrefab;
+    public Transform hilightPrefab;
     public bool activeRay = true;
     Map map;
     List<LaserElement> laserList = new List<LaserElement>();
+    List<LaserElement> hilightList = new List<LaserElement>();
+    float laserLength;
+    float hilightTiming = 0;
+    float hilightWidth = 8.0f;
+    float hilightInterval = 3.76f;
     public static bool isClear;
 
     // Use this for initialization
     void Start()
     {
         isClear = false;
+        laserLength = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
 
+        hilightList.ForEach(i => Destroy(i.t.gameObject));
+        hilightList.Clear();
+        if (activeRay)
+        {
+            float laserPos = 0;
+            int hilightCount = 0;
+            LaserElement newHilight;
+            hilightTiming = (hilightTiming + Time.deltaTime * hilightInterval) % hilightInterval;
+            for (int i = 0; i < laserList.Count; i++)
+            {
+                laserPos += laserList[i].length;
+                if (laserPos >= hilightCount * hilightInterval + hilightTiming)
+                {
+                    newHilight = new LaserElement(hilightPrefab, laserList[i].p, laserList[i].dir, 1.0f);
+                    hilightList.Add(newHilight);
+                    if (laserList[i].length < 1) newHilight.length = laserList[i].length;
+                    MeshRenderer render = newHilight.t.GetComponent<MeshRenderer>();
+                    render.material.mainTextureScale = new Vector2(1.0f, hilightWidth * newHilight.length);
+                    render.material.mainTextureOffset = new Vector2(0.0f, -hilightWidth * (hilightCount * hilightInterval + hilightTiming + laserList[i].length - laserPos) + 0.5f);
+                    render.sortingOrder = laserList.Count;
+                    hilightCount++;
+                }
+            }
+        }
     }
     public void MakeRayLine()
     {
@@ -75,7 +106,6 @@ public class RayCast : MonoBehaviour
         laserList.Clear();
 
         Pos p, nextPos;
-        float laserLength = 0;
         p = map.start.Key;
         Direction dir = map.start.Value.dir;
 
@@ -125,6 +155,7 @@ public class RayCast : MonoBehaviour
             render.sortingOrder = i;
         }
         activeRay = true;
+        hilightTiming = 0;
     }
 
     public void RemoveRay()
@@ -135,6 +166,7 @@ public class RayCast : MonoBehaviour
         laserList.Clear();
         activeRay = false;
         ray.enabled = false;
+        laserLength = 0;
     }
 }
 
