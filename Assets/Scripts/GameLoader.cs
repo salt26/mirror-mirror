@@ -22,6 +22,7 @@ public class GameLoader : MonoBehaviour
         }
         // rayCast.ray.SetVertexCount(1);
         // rayCast.MakeRayLine();
+        RayCast.isClear = false;
         rayCast.MakeLaserSprite();
 
         double minLength = double.PositiveInfinity;

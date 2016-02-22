@@ -15,14 +15,17 @@ public class RayCast : MonoBehaviour
     float laserLength;
     float hilightTiming = 0;
     float hilightWidth = 8.0f;
-    float hilightInterval = 3.76f;
+    float hilightInterval = 5.63f;
+    float hilightSpeed = 4f;
     public static bool isClear;
+    public static bool playingClearAnimation;
 
     // Use this for initialization
     void Start()
     {
         isClear = false;
-        laserLength = 0;
+        playingClearAnimation = false;
+        RemoveRay();
     }
 
     // Update is called once per frame
@@ -31,12 +34,12 @@ public class RayCast : MonoBehaviour
 
         hilightList.ForEach(i => Destroy(i.t.gameObject));
         hilightList.Clear();
-        if (activeRay)
+        if (activeRay && !playingClearAnimation)
         {
             float laserPos = 0;
             int hilightCount = 0;
             LaserElement newHilight;
-            hilightTiming = (hilightTiming + Time.deltaTime * hilightInterval) % hilightInterval;
+            hilightTiming = (hilightTiming + Time.deltaTime * hilightSpeed) % hilightInterval;
             for (int i = 0; i < laserList.Count; i++)
             {
                 laserPos += laserList[i].length;
@@ -122,9 +125,11 @@ public class RayCast : MonoBehaviour
                 // Clear
                 Debug.Log("Level Clear");
                 isClear = true;
+                /*
                 PlayerPrefs.SetInt(GameLoader.levelData, 1);
                 PlayerPrefs.Save();
                 FindObjectOfType<UIButtonHandler>().onMenuOpen();
+                */
                 break;
             }
             if (map.tileset.TryGetValue(nextPos, out next))
@@ -156,6 +161,48 @@ public class RayCast : MonoBehaviour
         }
         activeRay = true;
         hilightTiming = 0;
+        if (isClear) StartCoroutine(StageClear());
+    }
+
+    IEnumerator StageClear()
+    {
+        PlayerPrefs.SetInt(GameLoader.levelData, 1);
+        PlayerPrefs.Save();
+        playingClearAnimation = true;
+        for (int i = 0; i < laserList.Count; i++)
+        {
+            laserList[i].t.gameObject.SetActive(false);
+        }
+        for (float clearLaserPos = 0; clearLaserPos < laserLength; clearLaserPos += Time.deltaTime * 6.0f)
+        {
+            float drawedLaserPos = 0;
+            for (int i = 0; i < laserList.Count; i++)
+            {
+                if (clearLaserPos - drawedLaserPos <= 0)
+                    break;
+                else
+                {
+                    laserList[i].t.gameObject.SetActive(true);
+                    if (clearLaserPos - drawedLaserPos <= 1.0f)
+                    {
+                        laserList[i].length = clearLaserPos - drawedLaserPos;
+                    }
+                    else if (laserList[i].length < 1.0f)
+                        laserList[i].length = 1.0f;
+                }
+                drawedLaserPos += laserList[i].length;
+            }
+            yield return null;
+        }
+        for (int i = 0; i < laserList.Count; i++)
+        {
+            laserList[i].t.gameObject.SetActive(true);
+            laserList[i].length = 1.0f;
+        }
+        yield return new WaitForSeconds(0.7f);
+        playingClearAnimation = false;
+        FindObjectOfType<UIButtonHandler>().onMenuOpen();
+        FindObjectOfType<UIButtonHandler>().menuUI.SetActive(false);
     }
 
     public void RemoveRay()
