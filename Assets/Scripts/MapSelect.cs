@@ -17,9 +17,11 @@ public class MapSelect : MonoBehaviour {
         {
             detailUI.transform.position = this.transform.position;
             FindObjectOfType<LevelSelectLoader>().targetMap = this.gameObject;
-            detailUI.transform.Find("MapSelect/mapRect").GetComponent<Image>().color = this.transform.GetComponent<Image>().color;
+            // detailUI.transform.Find("MapSelect/mapRect/MapNumber").GetComponent<Image>().color = this.transform.GetComponent<Image>().color;
+            detailUI.transform.Find("MapSelect/mapRect").GetComponent<Image>().sprite = this.transform.GetComponent<Image>().sprite;
             detailUI.transform.Find("MapSelect/mapRect/thumbnail").GetComponent<Image>().sprite = this.transform.Find("thumbnail").GetComponent<Image>().sprite;
-            detailUI.transform.Find("MapSelect/mapRect/ClearText").GetComponent<Text>().text = this.transform.Find("ClearText").GetComponent<Text>().text;
+            detailUI.transform.Find("MapSelect/mapRect/ClearStar").GetComponent<Image>().sprite = this.transform.Find("ClearStar").GetComponent<Image>().sprite;
+            detailUI.transform.Find("MapSelect/mapRect/MapNumber").GetComponent<Text>().text = this.transform.Find("MapNumber").GetComponent<Text>().text;
             StartCoroutine("PopUp");
             LevelSelectLoader.isUIVisible = true;
         }

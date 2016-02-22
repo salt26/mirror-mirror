@@ -37,30 +37,31 @@ public class LevelSelectLoader : MonoBehaviour
                 Transform mapSlot = mapSelectHanlder.transform.GetChild(4 * i + j).GetChild(0);
                 if (tutorials[j] != null)
                 {
+                    mapSlot.GetChild(0).GetComponent<Text>().text = (4 * i + j + 1).ToString();
                     Sprite thumbnail = Resources.Load<Sprite>("img/thumbnail/" + tutorials[j].InnerText);
                     if (thumbnail != null)
                     {
-                        mapSlot.GetChild(0).GetComponent<Image>().sprite = thumbnail;
+                        mapSlot.GetChild(1).GetComponent<Image>().sprite = thumbnail;
                     }
                     else
                     {
-                        mapSlot.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/closeX");
+                        mapSlot.GetChild(1).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/closeX");
                     }
                     mapSlot.name = tutorials[j].InnerText;
 
                     if ( PlayerPrefs.GetInt(tutorials[j].InnerText) == 1)
                     {
-                        mapSlot.GetChild(1).GetComponent<Text>().text = "CLEAR";
+                        mapSlot.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/BlueStar");
                     }
                     else
                     {
-                        mapSlot.GetChild(1).GetComponent<Text>().text = "";
+                        mapSlot.GetChild(2).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/DottedBlueStar");
                     }
                 }
                 else
                 {
-                    mapSlot.GetChild(1).GetComponent<Text>().text = "";
-                    mapSlot.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/lock");
+                    mapSlot.GetChild(0).GetComponent<Text>().text = "";
+                    mapSlot.GetChild(1).GetComponent<Image>().sprite = Resources.Load<Sprite>("img/lock");
                     mapSlot.name = "";
                 }
                 UIButtonHandler.levelList[4 * i + j] = mapSlot.name;
