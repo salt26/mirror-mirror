@@ -239,7 +239,7 @@ public class RayCast : MonoBehaviour
                 m.mainTextureOffset = new Vector2(0, -7 * i + 3f);
                 yield return null;
             }
-            clearSound.PlayOneShot(clearSoundClip);
+            clearSound.PlayOneShot(clearSoundClip, 0.3f);
             for (; i < 1f; i += Time.deltaTime)
             {
                 m.mainTextureOffset = new Vector2(0, -7 * i + 3f);

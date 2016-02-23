@@ -30,7 +30,7 @@ public class MapSelect : MonoBehaviour {
     {
         for (float f = 0f; f < 1.1f; f += 0.1f)
         {
-            detailUI.transform.localScale = new Vector3(f, f) * 0.76f;
+            detailUI.transform.localScale = new Vector3(f, f) * 1.2f;
             detailUI.transform.position = (detailUIPos * f + this.transform.position * (1f - f));
             yield return null;
         }

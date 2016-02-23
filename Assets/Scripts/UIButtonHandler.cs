@@ -75,7 +75,7 @@ public class UIButtonHandler : MonoBehaviour
         }
         float f = 0.3f;
         clearUI.GetComponent<RectTransform>().sizeDelta = new Vector2(200f, 200f * f);
-        clearUI.GetComponent<RectTransform>().localPosition = origPos - new Vector3(0f, 100f * f - 100f);
+        clearUI.GetComponent<RectTransform>().localPosition = origPos - new Vector3(0f, 170f * f - 170f);
 
         for (f = 0f; f < 1f; f += Time.deltaTime)
         {
@@ -87,7 +87,7 @@ public class UIButtonHandler : MonoBehaviour
         {
             if (!clearAnimation) f = 1f;
             clearUI.GetComponent<RectTransform>().sizeDelta = new Vector2(200f, 200f * f);
-            clearUI.GetComponent<RectTransform>().localPosition = origPos - new Vector3(0f, 100f * f - 100f);
+            clearUI.GetComponent<RectTransform>().localPosition = origPos - new Vector3(0f, 170f * f - 170f);
             if (f > 0.4f)
             {
                 clearButtons[0].SetActive(true);
